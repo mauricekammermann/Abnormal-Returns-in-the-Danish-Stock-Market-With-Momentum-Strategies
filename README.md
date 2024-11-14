@@ -7,6 +7,7 @@ In this project we investigate to what extent a momentum strategy (such as the o
     ├── README.md          <- Add description
     ├── data
     │   ├── processed      <- Add description
+    │   ├── interim        <- Add description
     │   └── raw            <- Add description
     │
     │
