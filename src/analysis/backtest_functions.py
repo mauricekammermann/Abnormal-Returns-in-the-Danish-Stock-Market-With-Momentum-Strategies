@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+from scipy.stats import skew, kurtosis
+
 
 '''
 This file includes basic financial helper functions and the function to backtest
@@ -184,8 +186,155 @@ def backtest_momentum(returns_monthly, rf_monthly, numericDate_monthly, lookback
 
     return excess_returns, portfolio_weights, turnover_series
 
-# Example usage (you would need to replace these with actual DataFrames/Series):
-# returns_monthly = pd.DataFrame(...)
-# rf_monthly = pd.Series(...)
-# numericDate_monthly = pd.Series(...)
-# result, weights, turnover = backtest_momentum(returns_monthly, rf_monthly, numericDate_monthly, 12, 6, 24, 5, 5)
+
+def calculate_returns(index_series):
+    """
+    Calculates returns from an index series DataFrame, handling missing and invalid values as specified.
+    
+    Parameters:
+    - index_series (pd.DataFrame): DataFrame of index values with size NxM.
+    
+    Returns:
+    - pd.DataFrame: DataFrame of returns in percentages with the same size as the input,
+      with a row of zeros at the top.
+    """
+    # Replace invalid values with NaN
+    cleaned_series = index_series.apply(pd.to_numeric, errors='coerce')
+
+    # Fill up to 5 consecutive NaNs with the previous valid value
+    filled_series = cleaned_series.copy()
+    for col in filled_series.columns:
+        consecutive_nans = 0
+        for i in range(1, len(filled_series)):
+            if pd.isna(filled_series.iloc[i, filled_series.columns.get_loc(col)]):
+                consecutive_nans += 1
+                if consecutive_nans <= 5:
+                    filled_series.iloc[i, filled_series.columns.get_loc(col)] = filled_series.iloc[i - 1, filled_series.columns.get_loc(col)]
+            else:
+                consecutive_nans = 0  # Reset the counter if a valid value is found
+
+    returns = filled_series.pct_change()
+    returns = returns.round(3)  
+    returns.iloc[0, :] = 0.0
+    
+    for col in cleaned_series.columns:
+        consecutive_nans = 0
+        for i in range(1, len(filled_series)):
+            if pd.isna(cleaned_series.iloc[i, cleaned_series.columns.get_loc(col)]):
+                consecutive_nans += 1
+                if consecutive_nans <= 5:
+                    returns.iloc[i, filled_series.columns.get_loc(col)] = 0.0
+            else:
+                consecutive_nans = 0
+
+    for col in cleaned_series.columns:
+        nan_groups = cleaned_series[col].isna().astype(int).groupby(cleaned_series[col].notna().cumsum()).sum()
+        for i, group_size in enumerate(nan_groups):
+            if group_size > 5:
+                nan_start = nan_groups.index[i] - group_size + 1
+                nan_end = nan_start + group_size
+                returns.loc[nan_start:nan_end, col] = np.nan
+
+    return returns
+
+
+
+def summarize_performance(xs_returns, rf, factor_xs_returns, annualization_factor):
+    """
+    Computes (annualized) performance statistics including Sharpe ratio, alpha, beta, skewness, and kurtosis.
+
+    Parameters:
+    - xs_returns (array-like): Excess returns, with one column per asset or strategy, one row per period.
+    - rf (array-like): Risk-free rate for each period (should match xs_returns row count).
+    - factor_xs_returns (array-like): Factor excess returns for calculating alpha and beta.
+    - annualization_factor (int): Annualization factor (e.g., 12 for monthly data, 252 for daily data).
+
+    Returns:
+    - Dictionary with performance metrics.
+    """
+    xs_returns = np.asarray(xs_returns)
+    rf = np.asarray(rf).reshape(-1, 1)  # Ensure rf is a column vector
+    factor_xs_returns = np.asarray(factor_xs_returns)
+
+    n_periods, n_assets = xs_returns.shape
+
+    # Calculate total returns (excess returns + risk-free rate)
+    total_returns = xs_returns + rf @ np.ones((1, n_assets))
+
+    # Compute geometric mean returns
+    final_pf_val_rf = np.prod(1 + rf)
+    final_pf_val_total_ret = np.prod(1 + total_returns, axis=0)
+    geom_avg_rf = 100 * (final_pf_val_rf ** (annualization_factor / n_periods) - 1)
+    geom_avg_total_return = 100 * (final_pf_val_total_ret ** (annualization_factor / n_periods) - 1)
+    geom_avg_xs_return = geom_avg_total_return - geom_avg_rf
+
+    # Standard deviation and mean excess returns
+    std_xs_returns = np.nanstd(xs_returns, axis=0)
+    xs_return_monthly = np.nanmean(xs_returns, axis=0)
+    t_stats_xs_return_monthly = xs_return_monthly / (std_xs_returns / np.sqrt(n_periods))
+
+    # Regression for alpha and beta
+    X = np.hstack([np.ones((n_periods, 1)), factor_xs_returns])
+    b, *_ = np.linalg.lstsq(X, xs_returns, rcond=None)
+    betas = b[1:, :]
+    alpha_arithmetic = b[0, :]
+
+    # Calculate alpha t-stats
+    alphas_arith_monthly = xs_returns - (b[0, :] + factor_xs_returns @ betas)
+    se_alphas_arith_monthly = np.nanstd(alphas_arith_monthly, axis=0)
+    t_stat_alpha = alpha_arithmetic / (se_alphas_arith_monthly / np.sqrt(n_periods))
+
+    # Calculate geometric alpha based on benchmarks
+    bm_ret = factor_xs_returns @ betas + rf @ np.ones((1, n_assets))
+    final_pf_val_bm = np.prod(1 + bm_ret, axis=0)
+    geom_avg_bm_return = 100 * (final_pf_val_bm ** (annualization_factor / n_periods) - 1)
+    alpha_geometric = geom_avg_total_return - geom_avg_bm_return
+
+    # Convert returns to percentage points
+    xs_returns_pct = 100 * xs_returns
+    total_returns_pct = 100 * total_returns
+
+    # Compute autocorrelations
+    ac1 = np.diag(np.corrcoef(xs_returns[:-1, :], xs_returns[1:, :], rowvar=False)[:n_assets, n_assets:])
+    ac2 = np.diag(np.corrcoef(xs_returns[:-2, :], xs_returns[2:, :], rowvar=False)[:n_assets, n_assets:])
+    ac3 = np.diag(np.corrcoef(xs_returns[:-3, :], xs_returns[3:, :], rowvar=False)[:n_assets, n_assets:])
+    autocorrelations = np.vstack([ac1, ac2, ac3])
+
+    # Arithmetic and geometric averages, Sharpe ratios, and additional statistics
+    arithm_avg_total_return = annualization_factor * np.nanmean(total_returns_pct, axis=0)
+    arithm_avg_xs_return = annualization_factor * np.nanmean(xs_returns_pct, axis=0)
+    std_xs_returns_annualized = np.sqrt(annualization_factor) * std_xs_returns
+    sharpe_arithmetic = arithm_avg_xs_return / std_xs_returns_annualized
+    sharpe_geometric = geom_avg_xs_return / std_xs_returns_annualized
+
+    # Additional descriptive statistics
+    min_xs_return = np.nanmin(xs_returns, axis=0)
+    max_xs_return = np.nanmax(xs_returns, axis=0)
+    skew_xs_return = skew(xs_returns, axis=0, nan_policy='omit')
+    kurt_xs_return = kurtosis(xs_returns, axis=0, nan_policy='omit')
+
+    # Organize results into a dictionary
+    results = {
+        'Arithmetic_Avg_Total_Return': arithm_avg_total_return,
+        'Arithmetic_Avg_Excess_Return': arithm_avg_xs_return,
+        'Geometric_Avg_Total_Return': geom_avg_total_return,
+        'Geometric_Avg_Excess_Return': geom_avg_xs_return,
+        'Std_of_Excess_Returns_(Annualized)': std_xs_returns_annualized,
+        'Sharpe_Ratio_(Arithmetic)': sharpe_arithmetic,
+        'Sharpe_Ratio_(Geometric)': sharpe_geometric,
+        'Min_Excess_Return': min_xs_return,
+        'Max_Excess_Return': max_xs_return,
+        'Skewness_of_Excess_Return': skew_xs_return,
+        'Kurtosis_of_Excess_Return': kurt_xs_return,
+        'Alpha_(Arithmetic)': annualization_factor * 100 * alpha_arithmetic,
+        'Alpha_(Geometric)': alpha_geometric,
+        'T-stat_of_Alpha': t_stat_alpha,
+        'Beta': betas,
+        'Std_Dev_of_Excess_Returns': std_xs_returns,
+        'Monthly_Excess_Return': xs_return_monthly,
+        'T-stats_of_Monthly_Excess_Return': t_stats_xs_return_monthly,
+        'Autocorrelations': autocorrelations
+    }
+
+    return results
+

@@ -7,6 +7,11 @@ Created on Thu Nov 14 20:37:21 2024
 """
 import sys
 import logging
+import pandas as pd
+import numpy as np
+from src.data_processing import data_processing
+import backtest_functions
+
 
 def main():
     pass
