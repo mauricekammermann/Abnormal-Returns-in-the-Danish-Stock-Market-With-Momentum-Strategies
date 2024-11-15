@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
         # Save Refinitiv data
         save_path_refinitiv = base_path / "data" / "interim" / "refinitiv_data.csv"
-        cleaned_refinitiv_df.to_csv(save_path_refinitiv, index=False)
+        cleaned_refinitiv_df.to_csv(save_path_refinitiv)
         print(f"Refinitiv data saved at {save_path_refinitiv}")
 
         # Bloomberg Data Processing
@@ -25,7 +25,7 @@ if __name__ == "__main__":
 
         # Save Bloomberg data
         save_path_bloomberg = base_path / "data" / "interim" / "bloomberg_data.csv"
-        cleaned_bloomberg_df.to_csv(save_path_bloomberg, index=False)
+        cleaned_bloomberg_df.to_csv(save_path_bloomberg)
         print(f"Bloomberg data saved at {save_path_bloomberg}")
 
         # SNB Yield Data Processing
