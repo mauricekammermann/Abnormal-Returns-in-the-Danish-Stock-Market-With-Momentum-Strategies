@@ -44,7 +44,7 @@ def load_and_clean_data():
     """
     # Define the path to the data file based on the project structure
     base_path = Path(__file__).resolve().parents[2]
-    filepath = base_path / "data" / "raw" / "SPI_Data_MK.xlsx"
+    filepath = base_path / "data" / "raw" / "SPI_Data_Datastream_raw.xlsx"
 
     # Check if the file exists
     if not filepath.exists():
@@ -55,29 +55,6 @@ def load_and_clean_data():
     df = clean_data(df)
 
     return df
-
-
-def process_dataframe(df):
-    """
-    Processes a DataFrame to extract and format the date column, and return the rest of the data.
-    
-    Parameters:
-    - df (pd.DataFrame): DataFrame with a "date" column in the format "yyyy-mm-dd" as the first column.
-
-    Returns:
-    - formatted_date (pd.Series): Series with dates formatted as "yyyymmdd" (int).
-    - data (pd.DataFrame): DataFrame with the remaining columns.
-    """
-    # Convert the "date" column to datetime format
-    df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d')
-    
-    # Format the date column as "yyyymmdd" integer
-    formatted_date = df['date'].dt.strftime('%Y%m%d').astype(int)
-    
-    # Drop the "date" column to get the rest of the data
-    data = df.drop(columns=['date'])
-    
-    return formatted_date, data
 
 
 if __name__ == "__main__":
