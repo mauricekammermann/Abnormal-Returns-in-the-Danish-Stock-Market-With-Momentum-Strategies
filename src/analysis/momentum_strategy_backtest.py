@@ -16,11 +16,6 @@ def momentum_strategy(refinitiv_data_path, lookback_period=12, nLong=5, nShort=5
     # Convert all columns to numeric, coerce errors to NaN
     data = data.apply(pd.to_numeric, errors='coerce')
 
-    # Handle any specific formatting issues, such as commas as decimal separators
-    # If your data uses commas as decimal separators, uncomment the following lines:
-    # data = data.replace(',', '.', regex=True)
-    # data = data.apply(lambda x: x.str.replace(',', '.').astype(float))
-
     # Drop columns with all NaN values (if any)
     data.dropna(axis=1, how='all', inplace=True)
 
@@ -111,32 +106,3 @@ def momentum_strategy(refinitiv_data_path, lookback_period=12, nLong=5, nShort=5
 # Adjust the path to your CSV file
 refinitiv_data_path = 'H:\\Projekte\\SPI-Momentum\\data\\interim\\refinitiv_data.csv'
 excess_returns, portfolio_weights, turnover_series = momentum_strategy(refinitiv_data_path)
-
-
-
-# Parameters
-lookback_period = 12  # Look back over the past 12 months
-nLong = 5             # Number of assets to go long
-nShort = 5            # Number of assets to go short
-holding_period = 1    # Rebalance every month
-rf_monthly = 0.0      # Risk-free rate per month
-
-# Run the strategy
-excess_returns, portfolio_weights, turnover_series = momentum_strategy(
-    refinitiv_data_path,
-    lookback_period=lookback_period,
-    nLong=nLong,
-    nShort=nShort,
-    holding_period=holding_period,
-    rf_monthly=rf_monthly
-)
-
-# Display results
-print("Excess Returns:")
-print(excess_returns)
-print("\nPortfolio Weights:")
-print(portfolio_weights)
-print("\nTurnover Series:")
-print(turnover_series)
-
-
