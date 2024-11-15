@@ -140,6 +140,7 @@ def backtest_momentum(returns_monthly, rf_monthly, numericDate_monthly, lookback
 
         # Condition 2: Asset must still exist at the time of portfolio formation (month 't')
         valid_assets &= returns_monthly.iloc[t].notna()
+        valid_assets = valid_assets.reindex(returns_monthly.columns, fill_value=False)
 
         # Filter possible assets based on the conditions
         cumulative_returns = pd.Series(np.nan, index=returns_monthly.columns)
@@ -187,6 +188,24 @@ def backtest_momentum(returns_monthly, rf_monthly, numericDate_monthly, lookback
     return excess_returns, portfolio_weights, turnover_series
 
 
+def mark_invalid_as_nan(df):
+    """
+    Replaces missing values (NaN) or values that are neither integers, floats, nor complex numbers with NaN.
+
+    Parameters:
+    - df (pd.DataFrame): The input DataFrame.
+
+    Returns:
+    - pd.DataFrame: The modified DataFrame with invalid values replaced by NaN.
+    """
+    def is_valid_number(value):
+        return isinstance(value, (int, float, complex)) and not pd.isna(value)
+
+    # Apply the validation to each value in the DataFrame
+    return df.applymap(lambda x: x if is_valid_number(x) else np.nan)
+
+
+
 def calculate_returns(index_series):
     """
     Calculates returns from an index series DataFrame, handling missing and invalid values as specified.
@@ -198,46 +217,14 @@ def calculate_returns(index_series):
     - pd.DataFrame: DataFrame of returns in percentages with the same size as the input,
       with a row of zeros at the top.
     """
-    # Replace invalid values with NaN
-    cleaned_series = index_series.apply(pd.to_numeric, errors='coerce')
-
-    # Fill up to 5 consecutive NaNs with the previous valid value
-    filled_series = cleaned_series.copy()
-    for col in filled_series.columns:
-        consecutive_nans = 0
-        for i in range(1, len(filled_series)):
-            if pd.isna(filled_series.iloc[i, filled_series.columns.get_loc(col)]):
-                consecutive_nans += 1
-                if consecutive_nans <= 5:
-                    filled_series.iloc[i, filled_series.columns.get_loc(col)] = filled_series.iloc[i - 1, filled_series.columns.get_loc(col)]
-            else:
-                consecutive_nans = 0  # Reset the counter if a valid value is found
-
-    returns = filled_series.pct_change()
+    # first clean data
+    cleaned_series = mark_invalid_as_nan(index_series)
+    returns = cleaned_series.pct_change()
     returns = returns.round(3)  
     returns.iloc[0, :] = 0.0
-    
-    for col in cleaned_series.columns:
-        consecutive_nans = 0
-        for i in range(1, len(filled_series)):
-            if pd.isna(cleaned_series.iloc[i, cleaned_series.columns.get_loc(col)]):
-                consecutive_nans += 1
-                if consecutive_nans <= 5:
-                    returns.iloc[i, filled_series.columns.get_loc(col)] = 0.0
-            else:
-                consecutive_nans = 0
-
-    for col in cleaned_series.columns:
-        nan_groups = cleaned_series[col].isna().astype(int).groupby(cleaned_series[col].notna().cumsum()).sum()
-        for i, group_size in enumerate(nan_groups):
-            if group_size > 5:
-                nan_start = nan_groups.index[i] - group_size + 1
-                nan_end = nan_start + group_size
-                returns.loc[nan_start:nan_end, col] = np.nan
-
     return returns
-
-
+    
+    
 
 def summarize_performance(xs_returns, rf, factor_xs_returns, annualization_factor):
     """
