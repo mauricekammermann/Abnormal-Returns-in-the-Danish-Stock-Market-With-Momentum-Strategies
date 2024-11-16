@@ -102,7 +102,3 @@ def momentum_strategy(refinitiv_data_path, lookback_period=12, nLong=5, nShort=5
 
     return excess_returns, portfolio_weights, turnover_series
 
-# Example usage:
-# Adjust the path to your CSV file
-refinitiv_data_path = 'H:\\Projekte\\SPI-Momentum\\data\\interim\\refinitiv_data.csv'
-excess_returns, portfolio_weights, turnover_series = momentum_strategy(refinitiv_data_path)
