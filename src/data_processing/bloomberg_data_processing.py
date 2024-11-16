@@ -18,7 +18,7 @@ def clean_bloomberg_data(df):
     df.columns = ["date", "spx_index"]
 
     # Convert "date" to datetime format and automatically handle invalid entries
-    df["date"] = pd.to_datetime(df["date"], format="%d.%m.%Y", errors="coerce")
+    df["date"] = pd.to_datetime(df["date"], format="%Y-%m-%d", errors="coerce")
 
     # Drop rows where "date" parsing failed
     df = df[~df["date"].isna()]

@@ -1,7 +1,7 @@
 import pandas as pd
 from pathlib import Path
 from momentum_strategy_backtest import momentum_strategy
-from load_data import load_data  # Import the loading function
+from load_data import load_data  
 
 def main():
     # Define the base path for file locations
@@ -18,22 +18,20 @@ def main():
     print(f"Results Path: {results_path}")
 
     # Ensure the results directory exists
-    results_path.mkdir(parents=True, exist_ok=True)
+    # results_path.mkdir(parents=True, exist_ok=True)
 
     # Load risk-free monthly returns
     rf_monthly = load_data(rf_monthly_path)
     print("Loaded risk-free monthly returns:")
-    print(rf_monthly.head())
 
     # Strategy parameters
     lookback_period = 12  # Number of months to look back
     nLong = 5             # Number of assets to go long
     nShort = 5            # Number of assets to short
-    holding_period = 1    # Rebalance every month
+    holding_period = 3    # Rebalance every month
 
-    # Run the momentum strategy
     excess_returns, portfolio_weights, turnover_series = momentum_strategy(
-        refinitiv_data_path,
+        data_path=refinitiv_data_path,
         lookback_period=lookback_period,
         nLong=nLong,
         nShort=nShort,
