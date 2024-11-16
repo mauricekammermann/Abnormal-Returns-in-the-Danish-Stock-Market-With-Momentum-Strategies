@@ -40,6 +40,8 @@ def main():
         holding_period=holding_period,
         rf_monthly=rf_monthly
     )
-
+    
+    print(excess_returns, portfolio_weights, turnover_series)
+    
 if __name__ == '__main__':
     main()
