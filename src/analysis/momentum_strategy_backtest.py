@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from load_data import load_data
 
 def momentum_strategy(data_path, lookback_period=12, nLong=5, nShort=5, holding_period=1, rf_monthly=0.0):
     """
@@ -18,15 +19,13 @@ def momentum_strategy(data_path, lookback_period=12, nLong=5, nShort=5, holding_
     - portfolio_weights: pd.DataFrame, weights allocated to each asset over time.
     - turnover_series: pd.Series, turnover for each month.
     """
-    # Load data
-    data = pd.read_csv(data_path, low_memory=False)
-    data['date'] = pd.to_datetime(data['date'])
-    data.set_index('date', inplace=True)
-    data.sort_index(inplace=True)
+    # Load data 
+    data = load_data(data_path)
     
     # Convert all columns to numeric, coerce errors to NaN
     data = data.apply(pd.to_numeric, errors='coerce')
 
+    ### This sholuld be in data_processing
     # Drop columns with all NaN values
     data.dropna(axis=1, how='all', inplace=True)
 
