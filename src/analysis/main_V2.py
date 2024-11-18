@@ -39,13 +39,14 @@ def main():
     
     price_data_daily = load_data(refinitiv_data_path)
     
-    excess_returns, portfolio_weights, turnover_series, monthly_returns = momentum_strategy(
+    excess_returns, portfolio_weights, turnover_series, portfolio_returns = momentum_strategy(
         price_data_daily=price_data_daily,
         lookback_period=lookback_period,
         nLong=nLong,
         nShort=nShort,
         holding_period=holding_period,
-        rf_monthly=rf_monthly
+        rf_monthly=rf_monthly,
+        trx_cost=0
     )
     
     excess_returns.columns = ['Strategy_Returns']
@@ -54,7 +55,6 @@ def main():
     excess_returns.to_csv(results_path / "excess_returns.csv", index=True, header=True)
     portfolio_weights.to_csv(results_path / "portfolio_weights.csv", index=True, header=True)
     turnover_series.to_csv(results_path / "turnover_series.csv", index=True, header=True)
-    monthly_returns.to_csv(returns_path / "monthly_returns.csv", index=True, header=True)
     
     plot_cumulative_returns(excess_returns)
     

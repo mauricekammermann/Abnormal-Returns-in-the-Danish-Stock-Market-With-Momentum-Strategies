@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from load_data import load_data
 
-def momentum_strategy(price_data_daily, lookback_period, nLong, nShort, holding_period, rf_monthly):
+def momentum_strategy(price_data_daily, lookback_period, nLong, nShort, holding_period, rf_monthly, trx_cost):
     """
     Implements a momentum strategy with a rolling rebalancing approach.
 
@@ -113,10 +113,15 @@ def momentum_strategy(price_data_daily, lookback_period, nLong, nShort, holding_
     # Ensure rf_monthly_aligned is a Series
     if isinstance(rf_monthly_aligned, pd.DataFrame):
         rf_monthly_aligned = rf_monthly_aligned.iloc[:, 0]
+    
+    # Rename
+    rf_monthly_aligned.columns = ['rf']
+    portfolio_returns.columns = ['Portfolio_Returns']
 
     # Calculate excess returns
     if nShort == 0:
-        excess_returns = portfolio_returns - rf_monthly_aligned
+        excess_returns = portfolio_returns['Portfolio_Returns'] - rf_monthly_aligned['rf']
+        
     else:
         excess_returns = portfolio_returns
         
@@ -129,6 +134,11 @@ def momentum_strategy(price_data_daily, lookback_period, nLong, nShort, holding_
     if isinstance(monthly_returns, pd.Series):
         monthly_returns = monthly_returns.to_frame()
     
+    excess_returns.columns = ['Strategy_Returns']
+    turnover_series.columns = ['Turnover']
+    
+    # subtract trx cost
+    excess_returns = excess_returns['Strategy_Returns'] - turnover_series['Turnover'] * trx_cost
     
         
-    return excess_returns, portfolio_weights, turnover_series, monthly_returns
+    return excess_returns, portfolio_weights, turnover_series, portfolio_returns
