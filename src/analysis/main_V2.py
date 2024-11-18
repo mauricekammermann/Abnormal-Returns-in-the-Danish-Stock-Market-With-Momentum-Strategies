@@ -34,7 +34,7 @@ def main():
     # Strategy parameters
     lookback_period = 12  # Number of months to look back
     nLong = 20             # Number of assets to go long
-    nShort = 0            # Number of assets to short
+    nShort = 20            # Number of assets to short
     holding_period = 3    # Rebalance every month
     
     price_data_daily = load_data(refinitiv_data_path)
@@ -48,6 +48,8 @@ def main():
         rf_monthly=rf_monthly
     )
     
+    excess_returns.columns = ['Strategy_Returns']
+                  
     # Save results
     excess_returns.to_csv(results_path / "excess_returns.csv", index=True, header=True)
     portfolio_weights.to_csv(results_path / "portfolio_weights.csv", index=True, header=True)
