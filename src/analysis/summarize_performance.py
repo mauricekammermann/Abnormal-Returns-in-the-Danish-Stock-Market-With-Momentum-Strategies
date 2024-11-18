@@ -21,9 +21,9 @@ def summarize_performance(xs_returns, rf, factor_xs_returns, annualization_facto
     #xs_returns.index = xs_returns.index + pd.DateOffset(months=1)
 
     # Align frequencies to month-end using 'ME'
-    xs_returns = xs_returns.asfreq('ME')
-    rf = rf.asfreq('ME')
-    factor_xs_returns = factor_xs_returns.asfreq('ME')
+    xs_returns = xs_returns.asfreq('M')
+    rf = rf.asfreq('M')
+    factor_xs_returns = factor_xs_returns.asfreq('M')
 
     # Align the indices
     common_index = xs_returns.index.intersection(rf.index).intersection(factor_xs_returns.index)
@@ -148,6 +148,66 @@ def summarize_performance(xs_returns, rf, factor_xs_returns, annualization_facto
         'Monthly_Excess_Return': xs_return_mean,
         'T_stat_of_Monthly_Excess_Return': t_stats_xs_return,
         'Autocorrelations': autocorrelations,
-    }
+        }
+    
 
     return results
+
+def save_summary_to_latex(stats, file_path):
+    # Convert the dictionary into a formatted DataFrame
+    summary_table = pd.DataFrame({
+        'Metric': [
+            'Arithmetic Avg Total Return', 
+            'Arithmetic Avg Excess Return',
+            'Geometric Avg Total Return',
+            'Geometric Avg Excess Return',
+            'Std of Excess Returns (Annualized)',
+            'Sharpe Ratio (Arithmetic)',
+            'Sharpe Ratio (Geometric)',
+            'Min Excess Return',
+            'Max Excess Return',
+            'Skewness of Excess Return',
+            'Kurtosis of Excess Return',
+            'Alpha (Arithmetic)',
+            'Alpha (Geometric)',
+            'T-stat of Alpha',
+            'Beta (Factor Return)',
+            'Std Dev of Excess Returns',
+            'Monthly Excess Return',
+            'T-stat of Monthly Excess Return',
+            'Lag 1 Autocorrelation',
+            'Lag 2 Autocorrelation',
+            'Lag 3 Autocorrelation',
+        ],
+        'Value': [
+            stats['Arithmetic_Avg_Total_Return']['xs_Return'],
+            stats['Arithmetic_Avg_Excess_Return']['xs_Return'],
+            stats['Geometric_Avg_Total_Return']['xs_Return'],
+            stats['Geometric_Avg_Excess_Return']['xs_Return'],
+            stats['Std_of_Excess_Returns_Annualized']['xs_Return'],
+            stats['Sharpe_Ratio_Arithmetic']['xs_Return'],
+            stats['Sharpe_Ratio_Geometric']['xs_Return'],
+            stats['Min_Excess_Return']['xs_Return'],
+            stats['Max_Excess_Return']['xs_Return'],
+            stats['Skewness_of_Excess_Return']['xs_Return'],
+            stats['Kurtosis_of_Excess_Return']['xs_Return'],
+            stats['Alpha_Arithmetic']['xs_Return'],
+            stats['Alpha_Geometric']['xs_Return'],
+            stats['T_stat_of_Alpha']['xs_Return'],
+            stats['Beta']['Factor_Return']['xs_Return'],
+            stats['Std_Dev_of_Excess_Returns']['xs_Return'],
+            stats['Monthly_Excess_Return']['xs_Return'],
+            stats['T_stat_of_Monthly_Excess_Return']['xs_Return'],
+            stats['Autocorrelations']['xs_Return']['Lag 1'],
+            stats['Autocorrelations']['xs_Return']['Lag 2'],
+            stats['Autocorrelations']['xs_Return']['Lag 3'],
+        ]
+    })
+
+    # Save DataFrame as LaTeX-formatted string
+    latex_table = summary_table.to_latex(index=False, float_format="%.4f")
+
+    # Write LaTeX table to file
+    with open(file_path, 'w') as f:
+        f.write(latex_table)
+    print(f"Summary saved to {file_path}")
