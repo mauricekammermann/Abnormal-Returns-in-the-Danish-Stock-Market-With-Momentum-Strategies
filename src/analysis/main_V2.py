@@ -1,7 +1,11 @@
 import pandas as pd
+import numpy as np
+import seaborn as sns
 from pathlib import Path
 from momentum_strategy_backtest import momentum_strategy
-from load_data import load_data  
+from load_data import load_data
+from plotPerformance import plot_cumulative_returns
+from plotRobustnessChecks import plotRobustnessChecks
 
 def main():
     # Define the base path for file locations
@@ -27,8 +31,8 @@ def main():
 
     # Strategy parameters
     lookback_period = 12  # Number of months to look back
-    nLong = 10             # Number of assets to go long
-    nShort = 0            # Number of assets to short
+    nLong = 20             # Number of assets to go long
+    nShort = 10            # Number of assets to short
     holding_period = 3    # Rebalance every month
 
     excess_returns, portfolio_weights, turnover_series, monthly_returns = momentum_strategy(
@@ -45,6 +49,20 @@ def main():
     portfolio_weights.to_csv(results_path / "portfolio_weights.csv", index=True, header=True)
     turnover_series.to_csv(results_path / "turnover_series.csv", index=True, header=True)
     monthly_returns.to_csv(returns_path / "monthly_returns.csv", index=True, header=True)
+    
+    plot_cumulative_returns(excess_returns)
+    
+    
+    # Plot robustness checks
+    # plotRobustnessChecks(
+    #     df,
+    #     title='Sharpe Ratios over Holding Periods',
+    #     x_label='Holding Period',
+    #     y_label='Sharpe Ratio',
+    #     savefig=True,
+    #     filename='sharpe_ratios_robustness.png'
+    # )
+    
 
     print("Results saved successfully!")
 
