@@ -133,12 +133,18 @@ def momentum_strategy(price_data_daily, lookback_period, nLong, nShort, holding_
         turnover_series = turnover_series.to_frame()
     if isinstance(monthly_returns, pd.Series):
         monthly_returns = monthly_returns.to_frame()
+    if isinstance(portfolio_returns, pd.Series):
+        portfolio_returns = portfolio_returns.to_frame()
     
     excess_returns.columns = ['Strategy_Returns']
     turnover_series.columns = ['Turnover']
-    
+    portfolio_returns.columns = ['Portfolio_Returns']
+
     # subtract trx cost
     excess_returns = excess_returns['Strategy_Returns'] - turnover_series['Turnover'] * trx_cost
+    portfolio_returns = portfolio_returns['Portfolio_Returns'] - turnover_series['Turnover'] * trx_cost
     
+    if isinstance(excess_returns, pd.Series):
+        excess_returns = excess_returns.to_frame()
         
     return excess_returns, portfolio_weights, turnover_series, portfolio_returns

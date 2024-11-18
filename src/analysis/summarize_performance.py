@@ -112,8 +112,8 @@ def summarize_performance(xs_returns, rf, factor_xs_returns, annualization_facto
     arithm_avg_total_return = annualization_factor * total_returns_pct.mean()
     arithm_avg_xs_return = annualization_factor * xs_returns_pct.mean()
     std_xs_returns_annualized = std_xs_returns * np.sqrt(annualization_factor)
-    sharpe_arithmetic = arithm_avg_xs_return / std_xs_returns_annualized
-    sharpe_geometric = geom_avg_xs_return / std_xs_returns_annualized
+    sharpe_arithmetic = arithm_avg_xs_return / std_xs_returns_annualized / 100
+    sharpe_geometric = geom_avg_xs_return / std_xs_returns_annualized / 100
 
     min_xs_return = xs_returns.min()
     max_xs_return = xs_returns.max()
