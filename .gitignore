@@ -34,3 +34,13 @@ Temporary Items
 
 # 
 __pycache__
+
+
+# Results
+data/results/excess_returns.csv
+data/results/monthly_returns.csv
+data/results/portfolio_weights.csv
+data/results/turnover_series.csv
+src/analysis/cumulative_returns.png
+src/analysis/sharpe_ratios_robustness.png
+
