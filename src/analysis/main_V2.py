@@ -6,6 +6,7 @@ from momentum_strategy_backtest import momentum_strategy
 from load_data import load_data
 from plotPerformance import plot_cumulative_returns
 from plotRobustnessChecks import plotRobustnessChecks
+from summarize_performance import summarize_performance
 
 def main():
     # Define the base path for file locations
@@ -16,6 +17,7 @@ def main():
     rf_monthly_path = base_path / "data" / "processed" / "risk_free.csv"
     results_path = base_path / "data" / "results"
     returns_path = base_path / "data" / "results"
+    spi_path = base_path / "data" / "processed" / "bloomberg_data.csv"
 
     # Debug: Print the constructed file paths
     print(f"Refinitiv Data Path: {refinitiv_data_path}")
@@ -52,6 +54,28 @@ def main():
     
     plot_cumulative_returns(excess_returns)
     
+    # read spi index data
+    # Load data 
+    spi_price_daily = load_data(spi_path)
+    
+    # Resample data to monthly frequency and calculate returns
+    spi_price_monthly = spi_price_daily.resample('M').last()
+    spi_returns_monthly = spi_price_monthly.pct_change()
+    # Avoid massive outliers
+    spi_returns_monthly = np.clip(spi_returns_monthly, -0.5, 0.5)
+    spi_XsReturns_monthly = spi_returns_monthly - rf_monthly
+    
+    print(spi_returns_monthly.shape)
+    print(rf_monthly.shape)
+    print(excess_returns.shape)
+    print(type(excess_returns))
+    print(excess_returns.head())
+    
+    print("Indices of xs_returns:", excess_returns.index)
+    print("Indices of rf:", rf_monthly.index)
+    print("Indices of factor_xs_returns:", spi_XsReturns_monthly.index)
+    stats = summarize_performance(excess_returns, rf_monthly, spi_XsReturns_monthly, 12)
+    print(stats)
     
     # Plot robustness checks
     # plotRobustnessChecks(
