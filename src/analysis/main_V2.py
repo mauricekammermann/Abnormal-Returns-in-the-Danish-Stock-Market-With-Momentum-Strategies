@@ -11,6 +11,7 @@ def main():
     refinitiv_data_path = base_path / "data" / "processed" / "refinitiv_data.csv"
     rf_monthly_path = base_path / "data" / "processed" / "risk_free.csv"
     results_path = base_path / "data" / "results"
+    returns_path = base_path / "data" / "results"
 
     # Debug: Print the constructed file paths
     print(f"Refinitiv Data Path: {refinitiv_data_path}")
@@ -26,11 +27,11 @@ def main():
 
     # Strategy parameters
     lookback_period = 12  # Number of months to look back
-    nLong = 5             # Number of assets to go long
-    nShort = 5            # Number of assets to short
+    nLong = 10             # Number of assets to go long
+    nShort = 0            # Number of assets to short
     holding_period = 3    # Rebalance every month
 
-    excess_returns, portfolio_weights, turnover_series = momentum_strategy(
+    excess_returns, portfolio_weights, turnover_series, monthly_returns = momentum_strategy(
         data_path=refinitiv_data_path,
         lookback_period=lookback_period,
         nLong=nLong,
@@ -38,11 +39,12 @@ def main():
         holding_period=holding_period,
         rf_monthly=rf_monthly
     )
-
+    
     # Save results
     excess_returns.to_csv(results_path / "excess_returns.csv", index=True, header=True)
     portfolio_weights.to_csv(results_path / "portfolio_weights.csv", index=True, header=True)
     turnover_series.to_csv(results_path / "turnover_series.csv", index=True, header=True)
+    monthly_returns.to_csv(returns_path / "monthly_returns.csv", index=True, header=True)
 
     print("Results saved successfully!")
 

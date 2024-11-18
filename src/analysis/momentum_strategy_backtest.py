@@ -26,9 +26,15 @@ def momentum_strategy(data_path, lookback_period, nLong, nShort, holding_period,
     # Resample data to monthly frequency and calculate returns
     monthly_prices = data.resample('M').last()
     monthly_returns = monthly_prices.pct_change()
+    # Avoid massive outliers
+    monthly_returns = np.clip(monthly_returns, -0.5, 0.5)
 
     # Calculate cumulative returns over the lookback period
     cum_returns = (1 + monthly_returns).rolling(window=lookback_period).apply(np.prod, raw=True) - 1
+    
+    # Avoid massive outliers
+    cum_returns = np.clip(cum_returns, -0.5, 0.5)
+    
 
     # Initialize portfolio weights and returns
     portfolio_weights = pd.DataFrame(0.0, index=monthly_returns.index, columns=monthly_returns.columns)
@@ -62,7 +68,8 @@ def momentum_strategy(data_path, lookback_period, nLong, nShort, holding_period,
         # Rank assets by momentum
         ranked_assets = lookback_returns.sort_values(ascending=False)
         long_assets = ranked_assets.head(nLong).index
-        short_assets = ranked_assets.tail(nShort).index
+        if nShort != 0:
+            short_assets = ranked_assets.tail(nShort).index
 
         # Reduce weights from assets that are being replaced (after holding_period)
         if t >= holding_period:
@@ -75,7 +82,9 @@ def momentum_strategy(data_path, lookback_period, nLong, nShort, holding_period,
         # Assign new weights to long and short positions
         new_weights = pd.Series(0.0, index=monthly_returns.columns)
         new_weights.loc[long_assets] = 1 / (nLong * holding_period)
-        new_weights.loc[short_assets] = -1 / (nShort * holding_period)
+        if nShort != 0:
+            new_weights.loc[short_assets] = -1 / (nShort * holding_period)
+            
         new_weights_allocation.loc[date] = new_weights
 
         # Update portfolio weights
@@ -106,6 +115,9 @@ def momentum_strategy(data_path, lookback_period, nLong, nShort, holding_period,
         rf_monthly_aligned = rf_monthly_aligned.iloc[:, 0]
 
     # Calculate excess returns
-    excess_returns = portfolio_returns - rf_monthly_aligned
+    if nShort == 0:
+        excess_returns = portfolio_returns - rf_monthly_aligned
+    else:
+        excess_returns = portfolio_returns
 
-    return excess_returns, portfolio_weights, turnover_series
+    return excess_returns, portfolio_weights, turnover_series, monthly_returns
