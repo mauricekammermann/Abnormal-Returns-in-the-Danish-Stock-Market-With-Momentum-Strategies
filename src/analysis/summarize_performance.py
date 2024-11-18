@@ -1,36 +1,29 @@
 import pandas as pd
 import numpy as np
-from scipy.stats import skew, kurtosis, t
+from scipy.stats import skew, kurtosis
 
 def summarize_performance(xs_returns, rf, factor_xs_returns, annualization_factor):
-    """
-    Computes annualized performance statistics including Sharpe ratio, alpha, beta, skewness, and kurtosis.
-
-    Parameters:
-    - xs_returns (pd.DataFrame): Excess returns of the strategy, can be DataFrame with multiple assets.
-    - rf (pd.Series or pd.DataFrame): Risk-free rate for each period.
-    - factor_xs_returns (pd.DataFrame): Factor excess returns for calculating alpha and beta.
-    - annualization_factor (int): Annualization factor (e.g., 12 for monthly data).
-
-    Returns:
-    - results: Dictionary with performance metrics.
-    """
-
-    # Ensure xs_returns and rf are DataFrames
+    # Check if inputs are Series, convert to DataFrame with column name "Return"
     if isinstance(xs_returns, pd.Series):
-        xs_returns = xs_returns.to_frame()
+        xs_returns = xs_returns.to_frame(name='Return')
     if isinstance(rf, pd.Series):
-        rf = rf.to_frame('rf')
+        rf = rf.to_frame(name='Return')
+    if isinstance(factor_xs_returns, pd.Series):
+        factor_xs_returns = factor_xs_returns.to_frame(name='Return')
+    
+    # Rename columns to avoid conflicts
+    xs_returns.columns = ['xs_Return']
+    rf.columns = ['rf_Return']
+    if 'Return' in factor_xs_returns.columns:
+        factor_xs_returns = factor_xs_returns.rename(columns={'Return': 'Factor_Return'})
 
     # Adjust the indices of xs_returns to align with rf and factor_xs_returns
-    # Shift xs_returns index forward by one month
-    xs_returns = xs_returns.copy()
-    xs_returns.index = xs_returns.index + pd.DateOffset(months=1)
+    #xs_returns.index = xs_returns.index + pd.DateOffset(months=1)
 
-    # Align frequencies to month-end
-    xs_returns = xs_returns.asfreq('M')
-    rf = rf.asfreq('M')
-    factor_xs_returns = factor_xs_returns.asfreq('M')
+    # Align frequencies to month-end using 'ME'
+    xs_returns = xs_returns.asfreq('ME')
+    rf = rf.asfreq('ME')
+    factor_xs_returns = factor_xs_returns.asfreq('ME')
 
     # Align the indices
     common_index = xs_returns.index.intersection(rf.index).intersection(factor_xs_returns.index)
@@ -38,11 +31,22 @@ def summarize_performance(xs_returns, rf, factor_xs_returns, annualization_facto
     rf = rf.loc[common_index]
     factor_xs_returns = factor_xs_returns.loc[common_index]
 
-    # Drop rows with any NaNs across all data
-    data_combined = pd.concat([xs_returns, rf, factor_xs_returns], axis=1).dropna()
+    # Handle missing values
+    rf = rf.fillna(method='ffill').fillna(method='bfill')
+    xs_returns = xs_returns.fillna(method='ffill').fillna(method='bfill')
+    factor_xs_returns = factor_xs_returns.fillna(method='ffill').fillna(method='bfill')
+
+    # Drop rows with NaNs in critical columns
+    data_combined = pd.concat([xs_returns, rf, factor_xs_returns], axis=1)
+    data_combined = data_combined.dropna(subset=xs_returns.columns.tolist() + rf.columns.tolist())
+
     xs_returns = data_combined[xs_returns.columns]
     rf = data_combined[rf.columns]
     factor_xs_returns = data_combined[factor_xs_returns.columns]
+
+    n_periods = len(xs_returns)
+    if n_periods == 0:
+        raise ValueError("No data available after alignment and NaN handling. Please check your input data.")
 
     # Ensure rf has same columns as xs_returns or is a single column
     if rf.shape[1] == 1:
@@ -50,11 +54,6 @@ def summarize_performance(xs_returns, rf, factor_xs_returns, annualization_facto
         rf.columns = xs_returns.columns
     elif rf.shape[1] != xs_returns.shape[1]:
         raise ValueError('rf must have either 1 column or the same number of columns as xs_returns')
-
-    # Check if there is data after alignment
-    n_periods = len(xs_returns)
-    if n_periods == 0:
-        raise ValueError("No data available after alignment and NaN removal. Please check your input data.")
 
     # Total returns
     total_returns = xs_returns + rf
@@ -78,48 +77,36 @@ def summarize_performance(xs_returns, rf, factor_xs_returns, annualization_facto
 
     for col in xs_returns.columns:
         y = xs_returns[col]
-
-        # Combine y and factors, drop NaNs
         data = pd.concat([y, factor_xs_returns], axis=1).dropna()
         y = data[col].values
         X = np.column_stack((np.ones(len(data)), data[factor_xs_returns.columns].values))
 
-        # Check if there's enough data
         if len(y) < X.shape[1]:
             raise ValueError(f"Not enough data points to estimate parameters for {col}")
 
-        # Calculate beta coefficients
         beta_hat = np.linalg.lstsq(X, y, rcond=None)[0]
         betas[col] = dict(zip(factor_xs_returns.columns, beta_hat[1:]))
 
-        # Calculate residuals and estimated variance
         y_hat = X @ beta_hat
         residuals = y - y_hat
-        sse = np.sum(residuals ** 2)
         degrees_of_freedom = len(y) - X.shape[1]
+        sse = np.sum(residuals ** 2)
         sigma_squared = sse / degrees_of_freedom
 
-        # Variance-Covariance Matrix
         cov_beta = sigma_squared * np.linalg.inv(X.T @ X)
         standard_errors = np.sqrt(np.diag(cov_beta))
-
-        # t-statistics
         t_stats = beta_hat / standard_errors
 
-        # Store alpha and its t-statistic
         alpha_arithmetic[col] = beta_hat[0]
         t_stat_alpha[col] = t_stats[0]
 
-    # Convert betas to DataFrame
-    betas_df = pd.DataFrame(betas).T  # Transpose to get assets as index
+    betas_df = pd.DataFrame(betas).T
 
-    # Geometric alpha based on benchmark
     bm_ret = factor_xs_returns.dot(betas_df.T) + rf
     final_bm_ret = (1 + bm_ret).prod()
     geom_avg_bm_return = 100 * (final_bm_ret ** (annualization_factor / n_periods) - 1)
     alpha_geometric = geom_avg_total_return - geom_avg_bm_return
 
-    # Annualized statistics
     xs_returns_pct = 100 * xs_returns
     total_returns_pct = 100 * total_returns
     arithm_avg_total_return = annualization_factor * total_returns_pct.mean()
@@ -128,13 +115,11 @@ def summarize_performance(xs_returns, rf, factor_xs_returns, annualization_facto
     sharpe_arithmetic = arithm_avg_xs_return / std_xs_returns_annualized
     sharpe_geometric = geom_avg_xs_return / std_xs_returns_annualized
 
-    # Additional descriptive statistics
     min_xs_return = xs_returns.min()
     max_xs_return = xs_returns.max()
     skew_xs_return = xs_returns.apply(lambda x: skew(x, nan_policy='omit'))
     kurt_xs_return = xs_returns.apply(lambda x: kurtosis(x, nan_policy='omit'))
 
-    # Autocorrelations
     autocorrelations = {}
     for col in xs_returns.columns:
         autocorrelations[col] = {
@@ -143,7 +128,6 @@ def summarize_performance(xs_returns, rf, factor_xs_returns, annualization_facto
             'Lag 3': xs_returns[col].autocorr(lag=3),
         }
 
-    # Organize results into a dictionary
     results = {
         'Arithmetic_Avg_Total_Return': arithm_avg_total_return,
         'Arithmetic_Avg_Excess_Return': arithm_avg_xs_return,

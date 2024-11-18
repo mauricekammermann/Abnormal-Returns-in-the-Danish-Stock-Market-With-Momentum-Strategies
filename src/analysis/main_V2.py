@@ -34,11 +34,13 @@ def main():
     # Strategy parameters
     lookback_period = 12  # Number of months to look back
     nLong = 20             # Number of assets to go long
-    nShort = 10            # Number of assets to short
+    nShort = 0            # Number of assets to short
     holding_period = 3    # Rebalance every month
-
+    
+    price_data_daily = load_data(refinitiv_data_path)
+    
     excess_returns, portfolio_weights, turnover_series, monthly_returns = momentum_strategy(
-        data_path=refinitiv_data_path,
+        price_data_daily=price_data_daily,
         lookback_period=lookback_period,
         nLong=nLong,
         nShort=nShort,
@@ -57,23 +59,21 @@ def main():
     # read spi index data
     # Load data 
     spi_price_daily = load_data(spi_path)
+
     
     # Resample data to monthly frequency and calculate returns
-    spi_price_monthly = spi_price_daily.resample('M').last()
+    spi_price_monthly = spi_price_daily.resample('ME').last()
+
+
     spi_returns_monthly = spi_price_monthly.pct_change()
+ 
+    
     # Avoid massive outliers
     spi_returns_monthly = np.clip(spi_returns_monthly, -0.5, 0.5)
-    spi_XsReturns_monthly = spi_returns_monthly - rf_monthly
+
+    spi_XsReturns_monthly = spi_returns_monthly['spx_index'] - rf_monthly['monthly_return']
     
-    print(spi_returns_monthly.shape)
-    print(rf_monthly.shape)
-    print(excess_returns.shape)
-    print(type(excess_returns))
-    print(excess_returns.head())
-    
-    print("Indices of xs_returns:", excess_returns.index)
-    print("Indices of rf:", rf_monthly.index)
-    print("Indices of factor_xs_returns:", spi_XsReturns_monthly.index)
+
     stats = summarize_performance(excess_returns, rf_monthly, spi_XsReturns_monthly, 12)
     print(stats)
     

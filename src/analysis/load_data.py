@@ -38,4 +38,8 @@ def load_data(data_path):
     # Drop rows with missing dates or all NaN values
     data.dropna(how='all', inplace=True)
 
+    # Ensure the output is always a DataFrame
+    if isinstance(data, pd.Series):
+        data = data.to_frame()
+
     return data

@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from load_data import load_data
 
-def momentum_strategy(data_path, lookback_period, nLong, nShort, holding_period, rf_monthly):
+def momentum_strategy(price_data_daily, lookback_period, nLong, nShort, holding_period, rf_monthly):
     """
     Implements a momentum strategy with a rolling rebalancing approach.
 
@@ -21,7 +21,7 @@ def momentum_strategy(data_path, lookback_period, nLong, nShort, holding_period,
     """
 
     # Load data 
-    data = load_data(data_path)
+    data = price_data_daily
     
     # Resample data to monthly frequency and calculate returns
     monthly_prices = data.resample('M').last()
@@ -119,5 +119,16 @@ def momentum_strategy(data_path, lookback_period, nLong, nShort, holding_period,
         excess_returns = portfolio_returns - rf_monthly_aligned
     else:
         excess_returns = portfolio_returns
-
+        
+    if isinstance(excess_returns, pd.Series):
+        excess_returns = excess_returns.to_frame()
+    if isinstance(portfolio_weights, pd.Series):
+        portfolio_weights = portfolio_weights.to_frame()
+    if isinstance(turnover_series, pd.Series):
+        turnover_series = turnover_series.to_frame()
+    if isinstance(monthly_returns, pd.Series):
+        monthly_returns = monthly_returns.to_frame()
+    
+    
+        
     return excess_returns, portfolio_weights, turnover_series, monthly_returns
