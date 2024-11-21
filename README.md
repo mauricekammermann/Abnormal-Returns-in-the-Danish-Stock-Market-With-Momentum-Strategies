@@ -47,7 +47,7 @@ If desired to use own data, please place the desired .xlsx files in [data/raw](d
 ## Reproducibility of Project
 This entire project aims to be fully reproducible. In order to do this, we provide two methods of replicating our project: (1) GitHub Repo Cloning and (2) Docker Containerization.  
 ### (1) GitHub Repo Cloning
-Describe how to clone repo and how to run jupyter notebook
+Describe how to clone repo and how to run jupyter notebook and how to compile LaTeX.
 
 ### (2) Docker
 This entire project has been Dockerized for easier deployment and ensuring full reproducibility. Follow these steps if you want to use docker:
