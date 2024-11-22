@@ -1,0 +1,52 @@
+\documentclass{beamer}
+
+%put this all into mybib because its ugly
+\usepackage{graphicx} % Required for inserting images
+\usepackage{xcolor}
+\usetheme{Madrid}
+\definecolor{teall}{RGB}{5, 77, 79}
+\usecolortheme[named=teall]{structure}
+
+%footnote
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{}
+\setbeamertemplate{footline}{%
+  \hfill%
+  \usebeamerfont{page number in head/foot}%
+  \usebeamercolor[fg]{page number in head/foot}%
+  \insertframenumber\,/\,\inserttotalframenumber%
+  \hspace*{2ex}%
+}
+\setbeamercolor{page number in head/foot}{fg=black}
+
+
+%Titlepage
+\title{Swiss Performance Index Momentum Strategy}
+\subtitle{Group Work Assignment: Digital Tools for Finance}
+\author{Iris Bodenmann, Justin Meichtry, Maurice Kammermann, Steve Nikitas}
+\titlegraphic{\includegraphics[height=1.5cm]{Universität_Zürich_logo.png}}
+\date{11th of December 2024}
+\institute[]{Igor Pozdeev\\Department of Finance\\ University of Zurich}
+
+\begin{document}
+\begin{frame}
+\maketitle
+\end{frame}
+
+%Table of Contents
+\begin{frame}
+\frametitle{Table of Contents}
+\tableofcontents
+\end{frame}
+
+%Introduction
+\section{Introduction}
+\begin{frame}{Introduction}
+\begin{itemize}
+    \item this
+    \item is
+    \item a
+    \item test
+\end{itemize}
+\end{frame}
+\end{document}
