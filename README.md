@@ -1,7 +1,10 @@
 # Swiss Performance Index (SPI) Momentum Strategy
-In this project, we investigate to what extent a momentum strategy (such as the one proposed by Jegadeesh and Titman (1993)) generates significant abnormal returns in the Swiss stock market after transaction costs. 
 
-Add some literature review, data, and results.
+In this project, we investigate whether the momentum effect, first documented by Jegadeesh and Titman (1993), persists in Switzerland to this day and to what extent it can generate abnormal net returns.
+
+The momentum effect describes the tendency of assets that have performed well in the recent past to continue outperforming in the near future, and vice versa for poor performers, contradicting the weak form of the efficient market hypothesis. However, the biggest drawback of momentum strategies is transaction costs, which diminish returns due to frequent portfolio turnover. Our primary aim, therefore, is to replicate and extend the work of Jegadeesh and Titman (1993) within the Swiss stock market context, while addressing these practical implementation challenges.
+
+We proxy the Swiss stock market using the constituents of the Swiss Performance Index (SPI) and test the effectiveness of classical momentum strategies from 2000 to 2024. We examine the robustness of these strategies by varying lookback periods, holding periods, and transaction costs. Our results (add results)
 
 Reference for results the juptyer notebook, report and presentation.
 
@@ -52,6 +55,7 @@ Describe how to clone repo and how to run jupyter notebook and how to compile La
 ### (2) Docker
 This entire project has been Dockerized for easier deployment and ensuring full reproducibility. Follow these steps if you want to use docker:
 
+SHOW HOW TO COMPILE LATEX AS WELL!
 1. Install Docker
 ```bash
     Installation guide
