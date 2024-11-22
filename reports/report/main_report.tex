@@ -1,0 +1,113 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{natbib}
+\usepackage[
+    backend=biber,
+    style=bwl-FU,
+    url=false,
+    doi=true,
+    eprint=false
+]{biblatex}
+\addbibresource{references_report.bib}
+
+%titlepage
+\begin{document}
+	\begin{titlepage}
+		\centering
+		\begin{figure}[!h]
+			\centering
+			\includegraphics[width=0.5\textwidth]{Universität_Zürich_logo.png}
+		\end{figure}
+		\Large{\textbf{Swiss Performance Index Momentum Strategy \\ Project Paper: Digital Tools for Finance}\\}
+
+		\vfill
+		
+		\large{Iris Bodenmann\\ Justin Meichtry\\ Maurice Kammermann \\ Steve Nikitas\\}
+		
+		\vfill
+	
+		\large{Igor Pozdeev\\Department of Finance\\ University of Zurich\\}
+
+        \vfill
+        \large{December 11th, 2024}
+	
+		\vfill
+		\begin{abstract}
+            Insert Abstract
+			
+			\vspace{2mm}
+			
+			\textbf{Keywords:} Momentum, Anomaly, Swiss Stock Market\\
+            \textbf{JEL Classification:} G4, G14, G17
+		\end{abstract}
+		
+		
+	\end{titlepage}
+    
+%table of contents
+\pagenumbering{roman}
+\setcounter{page}{1}
+\tableofcontents
+
+\clearpage
+\listoftables
+\listoffigures
+\clearpage
+
+
+%Introduction
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\section{Introduction}
+The momentum effect, a prominent market anomaly first documented by \cite{jegatit1993}, continues to intrigue researchers and challenge the efficient market hypothesis. This study examines the momentum effect in the Swiss stock market, focusing on individual stocks and accounting for transaction costs. Our primary aim is to replicate and extend the work of \cite{jegatit1993} within the Swiss stock market context. We investigate whether the momentum effect persists in Switzerland to this day and to what extent it can generate abnormal returns, while addressing the practical challenges of implementation.\\
+
+We proxy the Swiss stock market using the Swiss Performance Index (SPI). Our dataset comprises daily data for all 204 constituents of the SPI from January 2000 to October 2024, obtained from Bloomberg. To account for the risk-free rate, we use the yield of 1-year Swiss government bonds. The dataset has been cleaned to remove duplicates and is free from survivorship bias. \textbf{EXTEND ON METHODOLOGY}. \\
+
+and results. \\
+
+This paper is structured into six sections. Section 2 provides a concise literature review on momentum. Section 3 details the data and methodology used in this study. Section 4 presents the main findings. Section 5 conducts robustness checks. Section 6 concludes with a short summary and practical recommendations for implementation.
+
+\newpage
+
+%Literature Review
+\section{Literature Review}
+The momentum effect, first documented by \cite{jegatit1993}, describes the tendency of assets that have performed well in the recent past to continue outperforming in the near future, and vice versa for poor performers. This so-called "momentum effect" contradicts the weak form of the efficient market hypothesis, which posits that future returns cannot be predicted using historical price data. \\
+
+\cite{jegatit1993} show that a strategy of buying stocks with high returns over the past 3 to 12 months and selling those with low returns over the same period generated significant abnormal returns. This finding was subsequently corroborated by numerous studies across different markets and time periods. For instance, \cite{rouwenhorst1998} confirmed the momentum effect in 12 European stock markets from 1978 to 1995. \\
+
+Interestingly, research in the 1980s focused on the "reversal effect," which is conceptually opposite to momentum. \cite{debondt1987} found that past losers outperformed past winners over longer horizons of 3 to 5 years. This long-term reversal effect coexists with the medium-term momentum effect, suggesting a complex pattern of return predictability across different time horizons. \\
+
+Specifically for the Swiss market, \cite{rouwenhorst1998} included Switzerland in his study of 12 European markets, confirming the presence of the momentum effect. Additionally, \cite{ammann2008} investigated momentum strategies in the Swiss stock market from 1994 to 2007, finding significant momentum profits even after accounting for transaction costs.
+
+\newpage
+%Data and Methodology
+\section{Data and Methodology}
+
+
+
+
+\newpage
+
+%Results
+\section{Results}
+
+
+\newpage
+
+
+%Robustness check
+\section{Robustness Check}
+
+\newpage
+
+%Conclusion
+\section{Conclusion}
+
+
+\newpage
+
+%References
+\printbibliography
+
+
+\end{document}
