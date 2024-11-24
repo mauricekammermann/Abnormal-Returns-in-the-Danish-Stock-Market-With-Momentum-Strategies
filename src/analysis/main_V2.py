@@ -74,9 +74,7 @@ def main():
 
     spi_XsReturns_monthly = spi_returns_monthly['spx_index'] - rf_monthly['monthly_return']
     
-
     stats = summarize_performance(excess_returns, rf_monthly, spi_XsReturns_monthly, 12)
-    print("Stats:", stats)
 
     # Save the summary table for LaTeX
     save_summary_to_latex(stats, summary_file_path)
