@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from load_data import load_data
+from src.analysis.load_data import load_data
 
 def momentum_strategy(price_data_daily, lookback_period, nLong, nShort, holding_period, rf_monthly, trx_cost):
     """
