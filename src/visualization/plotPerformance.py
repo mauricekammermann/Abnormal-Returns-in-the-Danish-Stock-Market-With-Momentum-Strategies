@@ -55,6 +55,7 @@ def plot_cumulative_returns(df, title='Cumulative Returns Over Time', x_label='D
     plt.tight_layout()
     
     if savefig:
+        print(f"Save the summarize performance plot to {filename}")
         plt.savefig(filename, dpi=300)
     
     plt.show()

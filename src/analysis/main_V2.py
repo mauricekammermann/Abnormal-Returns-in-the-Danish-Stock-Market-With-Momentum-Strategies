@@ -14,8 +14,6 @@ from src.visualization.plotPerformance import plot_cumulative_returns
 from src.visualization.plotRobustnessChecks import plotRobustnessChecks
 from summarize_performance import summarize_performance, save_summary_to_latex
 
-
-
 def main():
     # Define the base path for file locations
     base_path = Path(__file__).resolve().parents[2]
@@ -26,6 +24,7 @@ def main():
     results_path = base_path / "data" / "results"
     spi_path = base_path / "data" / "processed" / "bloomberg_data.csv"
     summary_file_path = results_path / "summary_performance.tex"
+    visualization_path = base_path / "reports" / "figures"
 
     # Debug: Print the constructed file paths
     print(f"Refinitiv Data Path: {refinitiv_data_path}")
@@ -64,7 +63,7 @@ def main():
     portfolio_weights.to_csv(results_path / "portfolio_weights.csv", index=True, header=True)
     turnover_series.to_csv(results_path / "turnover_series.csv", index=True, header=True)
     
-    plot_cumulative_returns(excess_returns)
+    plot_cumulative_returns(excess_returns, filename=visualization_path / "cumulative_returns")
     
     # read spi index data
     # Load data 
@@ -105,15 +104,17 @@ def main():
         excess_returnsTemp.columns = ['Strategy_Returns']
         stats_temp = summarize_performance(excess_returnsTemp, rf_monthly, spi_XsReturns_monthly, 12)
         rc_holding_period.loc[i,'Sharpe_Ratio'] = stats_temp['Sharpe_Ratio_Arithmetic']['xs_Return']
+        
     print("RC of Holding Period")
     print(rc_holding_period)
+    
     plotRobustnessChecks(
         rc_holding_period,
         title='Sharpe Ratios over Holding Periods',
         x_label='Holding Period',
         y_label='Sharpe Ratio',
         savefig=True,
-        filename='rc_holding_period.png'
+        filename=visualization_path / 'rc_holding_period.png'
     )
 
     
@@ -133,15 +134,17 @@ def main():
         excess_returnsTemp.columns = ['Strategy_Returns']
         stats_temp = summarize_performance(excess_returnsTemp, rf_monthly, spi_XsReturns_monthly, 12)
         rc_lookback_period.loc[i,'Sharpe_Ratio'] = stats_temp['Sharpe_Ratio_Arithmetic']['xs_Return']
+        
     print("RC of Lookback Period")
     print(rc_lookback_period)
+    
     plotRobustnessChecks(
         rc_lookback_period,
         title='Sharpe Ratios over Lookback Periods',
         x_label='Lookback Period',
         y_label='Sharpe Ratio',
         savefig=True,
-        filename='rc_lookback_period.png'
+        filename= visualization_path / 'rc_lookback_period.png'
     )
     
     
@@ -161,15 +164,17 @@ def main():
         excess_returnsTemp.columns = ['Strategy_Returns']
         stats_temp = summarize_performance(excess_returnsTemp, rf_monthly, spi_XsReturns_monthly, 12)
         rc_number_assets.loc[i,'Sharpe_Ratio'] = stats_temp['Sharpe_Ratio_Arithmetic']['xs_Return']
+        
     print("RC of Number Assets")
     print(rc_number_assets)
+    
     plotRobustnessChecks(
         rc_number_assets,
         title='Sharpe Ratios over Number Assets Long/Short',
         x_label='Number Assets Long/Short',
         y_label='Sharpe Ratio',
         savefig=True,
-        filename='rc_number_assets.png'
+        filename=visualization_path / 'rc_number_assets.png'
     )
     
     print(excess_returns.head)
@@ -208,7 +213,7 @@ def main():
         # Add the new column to the DataFrame
         rc_trxCost_XsRet[column_name] = portfolio_returnsTemp['Strategy_Returns']
     # plot here
-    plot_cumulative_returns(rc_trxCost_XsRet, title='Robustness Check Transaction Costs', x_label='Date', y_label='Cumulative Returns', figsize=(12,6), grid=True, savefig=True, filename='rc_trxCost.png')
+    plot_cumulative_returns(rc_trxCost_XsRet, title='Robustness Check Transaction Costs', x_label='Date', y_label='Cumulative Returns', figsize=(12,6), grid=True, savefig=True, filename=visualization_path / 'rc_trxCost.png')
 
     print(rc_trxCost_XsRet.head)
     print(rc_trxCost_XsRet.shape)
@@ -222,7 +227,7 @@ def main():
     #     x_label='Holding Period',
     #     y_label='Sharpe Ratio',
     #     savefig=True,
-    #     filename='sharpe_ratios_robustness.png'
+    #     filename=visualization_path / 'sharpe_ratios_robustness.png'
     # )
     
 
