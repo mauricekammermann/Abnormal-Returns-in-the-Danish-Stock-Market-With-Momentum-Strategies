@@ -1,0 +1,13 @@
+# config.yaml
+strategy_parameters:
+  lookback_period: 12
+  holding_period: 3
+  nLong: 20
+  nShort: 20
+  trx_cost: 0.001
+
+robustness_checks:
+  holding_periods: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  lookback_periods: [3, 6, 9, 12]
+  num_assets: [10, 20, 30, 40, 50]
+  trx_costs: [0.001, 0.005, 0.01]

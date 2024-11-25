@@ -1,10 +1,10 @@
 import pandas as pd
 import numpy as np
-import seaborn as sns
 from pathlib import Path
 import sys
 
 # Add the project root directory to sys.path
+# This should later be part of the configuration file
 project_root = Path(__file__).resolve().parents[2]
 sys.path.append(str(project_root))
 
