@@ -36,12 +36,12 @@ Add Final main picture of our results.
 --------
 
 ## Data and Data Processing
-In this research project, we utilized data from Bloomberg and the Swiss National Bank (SNB) spanning the period from 2000 to 2024. Data from Bloomberg (total return of the constituents in the SPI and SPI itself) and data from the SNB (monthly yield of 1 year Swiss Federal Bonds) are provided. Note that data is only used for academic research and not to be commercialized.
+In this research project, we utilized data from Datastream and the Swiss National Bank (SNB) spanning the period from 2000 to 2024. Data from Datastream (total return of the constituents in the SPI and SPI itself) and data from the SNB (monthly yield of 1 year Swiss Federal Bonds) are provided. Note that data is only used for academic research and not to be commercialized.
 
 The [provided data processors](src/data_processing) clean the .xlsx and .csv by removing headers and unnecessary information. Then, they save the processed files as a .csv file with the correct name in [data/processed](data/processed). 
 
 Updating the data could work as follows, assuming you have access to a Datastream-Refinitiv portal:
-1. Download and open the Excel file [SPI_Data_Datastream_raw](data/raw/SPI_Data_Datastream_raw.xlsx) and pull the newest data.
+1. Download and open the Excel file [SPI_Data_Datastream](data/raw/SPI_Data_Datastream.xlsx) and pull the newest data.
 2. Fetch the newest SNB data with the [data_fetcher_snb.py](datafeed/data_fetcher_snb.py), adjusting the API link with the desired dates. It should be saved automatically in [data/raw](data/raw) as `snb_yield_data.csv`.
 3. Then, please run the [data processor](src/data_processing/main.py). The processed .csv files should be automatically saved in [data/processed](data/processed) with the correct name.
 
