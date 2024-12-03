@@ -1,8 +1,11 @@
+
+
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def plot_cumulative_returns(df, title='Cumulative Returns Over Time', x_label='Date', y_label='Cumulative Returns', figsize=(12,6), grid=True, savefig=True, filename='cumulative_returns.png'):
+def plot_cumulative_returns(df, title='Cumulative Returns Over Time', x_label='Date', y_label='Cumulative Returns', figsize=(12,6), grid=True, savefig=True, filename='//wsl.localhost/Ubuntu/home/maurice/Visuals/cumulative_returns.png'):
     """
     Plots cumulative returns over time for each asset in the dataframe or series.
 

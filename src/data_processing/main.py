@@ -1,5 +1,5 @@
-from refinitiv_data_processing import load_and_clean_data
-from bloomberg_data_processing import load_and_clean_bloomberg_data
+from constituents_data_processing import load_and_clean_data
+from index_data_processing import load_and_clean_index_data
 from snb_data_processing import load_and_clean_snb_data
 from process_risk_free_yield import process_risk_free_yield
 from pathlib import Path
@@ -9,25 +9,25 @@ if __name__ == "__main__":
         # Define the base path for file locations
         base_path = Path(__file__).resolve().parents[2]
 
-        # Refinitiv Data Processing
-        print("Processing Refinitiv data...")
-        refinitiv_file_path = base_path / "data" / "raw" / "SPI_Data_Datastream_raw.xlsx"
-        cleaned_refinitiv_df = load_and_clean_data(refinitiv_file_path)
+        # Refinitiv Data of Constituents Processing
+        print("Processing Constituents data...")
+        constituents_file_path = base_path / "data" / "raw" / "SPI_Constituents_Data.xlsx"
+        cleaned_consituents_df = load_and_clean_data(constituents_file_path)
 
-        # Save Refinitiv data
-        save_path_refinitiv = base_path / "data" / "processed" / "refinitiv_data.csv"
-        cleaned_refinitiv_df.to_csv(save_path_refinitiv)
-        print(f"Refinitiv data saved at {save_path_refinitiv}")
+        # Save Data of Constituents
+        save_path_consituents = base_path / "data" / "processed" / "constituents_data.csv"
+        cleaned_consituents_df.to_csv(save_path_consituents)
+        print(f"Constituents data saved at {save_path_consituents}")
 
-        # Bloomberg Data Processing
-        print("\nProcessing Bloomberg data...")
-        bloomberg_file_path = base_path / "data" / "raw" / "SPI_Index_Data.xlsx"
-        cleaned_bloomberg_df = load_and_clean_bloomberg_data(bloomberg_file_path)
+       # Data of Index Processing
+        print("Processing Index data...")
+        index_file_path = base_path / "data" / "raw" / "SPI_Index_Data.xlsx"
+        cleaned_index_df = load_and_clean_index_data(index_file_path)
 
-        # Save Bloomberg data
-        save_path_bloomberg = base_path / "data" / "processed" / "bloomberg_data.csv"
-        cleaned_bloomberg_df.to_csv(save_path_bloomberg, index=False)
-        print(f"Bloomberg data saved at {save_path_bloomberg}")
+        # Save Data of Index 
+        save_path_index = base_path / "data" / "processed" / "index_data.csv"
+        cleaned_index_df.to_csv(save_path_index)
+        print(f"Index data saved at {save_path_index}")
 
         # SNB Yield Data Processing
         print("\nProcessing SNB yield data...")
