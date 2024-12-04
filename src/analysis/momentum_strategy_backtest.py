@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from load_data import load_data
+from src.analysis.load_data import load_data
 
 def momentum_strategy(price_data_daily, lookback_period, nLong, nShort, holding_period, rf_monthly, trx_cost):
     """
@@ -24,7 +24,7 @@ def momentum_strategy(price_data_daily, lookback_period, nLong, nShort, holding_
     data = price_data_daily
     
     # Resample data to monthly frequency and calculate returns
-    monthly_prices = data.resample('M').last()
+    monthly_prices = data.resample('ME').last()
     monthly_returns = monthly_prices.pct_change()
     # Avoid massive outliers
     monthly_returns = np.clip(monthly_returns, -0.5, 0.5)
@@ -153,8 +153,6 @@ def momentum_strategy(price_data_daily, lookback_period, nLong, nShort, holding_
         
     # subtract trx cost
     excess_returns.columns = ['Strategy_Returns']
-    print(excess_returns.head)
-    print(type(excess_returns))
     excess_returns = excess_returns['Strategy_Returns'] - turnover_series['Turnover'] * trx_cost
     portfolio_returns = portfolio_returns['Portfolio_Returns'] - turnover_series['Turnover'] * trx_cost
     

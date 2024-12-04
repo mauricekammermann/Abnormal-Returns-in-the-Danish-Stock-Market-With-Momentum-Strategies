@@ -60,7 +60,7 @@ def main():
     spi_returns_monthly = spi_price_monthly.pct_change()
     if isinstance(spi_returns_monthly, pd.Series):
         spi_returns_monthly = spi_returns_monthly.to_frame()
- 
+     
     # Avoid massive outliers
     spi_returns_monthly = np.clip(spi_returns_monthly, -0.5, 0.5)
     spi_XsReturns_monthly = spi_returns_monthly['SWISS PERFORMANCE INDEX - TOT RETURN IND'] - rf_monthly['monthly_return']

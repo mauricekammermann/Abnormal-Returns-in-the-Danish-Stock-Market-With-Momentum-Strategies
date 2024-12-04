@@ -21,9 +21,9 @@ def summarize_performance(xs_returns, rf, factor_xs_returns, annualization_facto
     #xs_returns.index = xs_returns.index + pd.DateOffset(months=1)
 
     # Align frequencies to month-end using 'ME'
-    xs_returns = xs_returns.asfreq('M')
-    rf = rf.asfreq('M')
-    factor_xs_returns = factor_xs_returns.asfreq('M')
+    xs_returns = xs_returns.asfreq('ME')
+    rf = rf.asfreq('ME')
+    factor_xs_returns = factor_xs_returns.asfreq('ME')
 
     # Align the indices
     common_index = xs_returns.index.intersection(rf.index).intersection(factor_xs_returns.index)
