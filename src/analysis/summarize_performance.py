@@ -194,7 +194,7 @@ def save_summary_to_latex(stats, file_path):
             stats['Alpha_Arithmetic']['xs_Return'],
             stats['Alpha_Geometric']['xs_Return'],
             stats['T_stat_of_Alpha']['xs_Return'],
-            stats['Beta']['Factor_Return']['xs_Return'],
+            stats['Beta']['Benchmark']['xs_Return'],
             stats['Std_Dev_of_Excess_Returns']['xs_Return'],
             stats['Monthly_Excess_Return']['xs_Return'],
             stats['T_stat_of_Monthly_Excess_Return']['xs_Return'],

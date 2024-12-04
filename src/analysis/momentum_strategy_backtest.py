@@ -110,9 +110,15 @@ def momentum_strategy(price_data_daily, lookback_period, nLong, nShort, holding_
     # Align rf_monthly with portfolio_returns index
     rf_monthly_aligned = rf_monthly.reindex(portfolio_returns.index).fillna(0.0)
 
-    # Ensure rf_monthly_aligned is a Series
+    # Ensure both are a Series
     if isinstance(rf_monthly_aligned, pd.DataFrame):
         rf_monthly_aligned = rf_monthly_aligned.iloc[:, 0]
+    if isinstance(rf_monthly_aligned, pd.Series):
+        rf_monthly_aligned = rf_monthly_aligned.to_frame()
+        rf_monthly_aligned.columns = ['rf']         
+    if isinstance(portfolio_returns, pd.Series):
+        portfolio_returns = portfolio_returns.to_frame()
+        portfolio_returns.columns = ['Portfolio_Returns']      
     
     # Rename
     rf_monthly_aligned.columns = ['rf']
@@ -123,10 +129,11 @@ def momentum_strategy(price_data_daily, lookback_period, nLong, nShort, holding_
         excess_returns = portfolio_returns['Portfolio_Returns'] - rf_monthly_aligned['rf']
         
     else:
-        excess_returns = portfolio_returns
+        excess_returns = portfolio_returns.copy()
         
     if isinstance(excess_returns, pd.Series):
         excess_returns = excess_returns.to_frame()
+        excess_returns.columns = ['Strategy_Returns']
     if isinstance(portfolio_weights, pd.Series):
         portfolio_weights = portfolio_weights.to_frame()
     if isinstance(turnover_series, pd.Series):
@@ -139,12 +146,24 @@ def momentum_strategy(price_data_daily, lookback_period, nLong, nShort, holding_
     excess_returns.columns = ['Strategy_Returns']
     turnover_series.columns = ['Turnover']
     portfolio_returns.columns = ['Portfolio_Returns']
-
+    
+    if isinstance(excess_returns, pd.Series):
+        excess_returns = excess_returns.to_frame()
+        excess_returns.columns = ['Strategy_Returns']
+        
     # subtract trx cost
+    excess_returns.columns = ['Strategy_Returns']
+    print(excess_returns.head)
+    print(type(excess_returns))
     excess_returns = excess_returns['Strategy_Returns'] - turnover_series['Turnover'] * trx_cost
     portfolio_returns = portfolio_returns['Portfolio_Returns'] - turnover_series['Turnover'] * trx_cost
     
     if isinstance(excess_returns, pd.Series):
         excess_returns = excess_returns.to_frame()
+        excess_returns.columns = ['Strategy_Returns']
+    if isinstance(portfolio_returns, pd.Series):
+        portfolio_returns = portfolio_returns.to_frame()
+        portfolio_returns.columns = ['Portfolio_Returns']        
+    
         
     return excess_returns, portfolio_weights, turnover_series, portfolio_returns

@@ -1,8 +1,8 @@
+# Import libraries
 import pandas as pd
 import numpy as np
 import seaborn as sns
 from pathlib import Path
-from momentum_strategy_backtest import momentum_strategy
 from load_data import load_data
 import sys
 
@@ -10,9 +10,12 @@ import sys
 project_root = Path(__file__).resolve().parents[2]
 sys.path.append(str(project_root))
 
+# Load other funcitons
 from src.visualization.plotPerformance import plot_cumulative_returns
 from src.visualization.plotRobustnessChecks import plotRobustnessChecks
 from summarize_performance import summarize_performance, save_summary_to_latex
+from momentum_strategy_backtest import momentum_strategy
+
 
 def main():
     # Define the base path for file locations
@@ -23,7 +26,8 @@ def main():
     rf_monthly_path = base_path / "data" / "processed" / "risk_free.csv"
     results_path = base_path / "data" / "results"
     spi_path = base_path / "data" / "processed" / "index_data.csv"
-    summary_file_path = results_path / "summary_performance.tex"
+    summary_file_path_longOnly = results_path / "summary_performance_longOnly.tex"
+    summary_file_path_longShort = results_path / "summary_performance_longShort.tex"
     visualization_path = base_path / "reports" / "figures"
 
     # Debug: Print the constructed file paths
@@ -39,14 +43,57 @@ def main():
     print("Loaded risk-free monthly returns:")
 
     # Strategy parameters
-    lookback_period = 12  # Number of months to look back
+    lookback_period = 6  # Number of months to look back
     nLong = 20             # Number of assets to go long
     nShort = 20            # Number of assets to short
-    holding_period = 3    # Rebalance every month
+    holding_period = 6    # Rebalance every month
     
     price_data_daily = load_data(constituents_data_path)
     
-    excess_returns, portfolio_weights, turnover_series, portfolio_returns = momentum_strategy(
+    # read spi index data
+    spi_price_daily = load_data(spi_path)
+    
+    # Resample data to monthly frequency and calculate returns
+    spi_price_monthly = spi_price_daily.resample('M').last()
+    
+    # Calculate Returns
+    spi_returns_monthly = spi_price_monthly.pct_change()
+    if isinstance(spi_returns_monthly, pd.Series):
+        spi_returns_monthly = spi_returns_monthly.to_frame()
+ 
+    # Avoid massive outliers
+    spi_returns_monthly = np.clip(spi_returns_monthly, -0.5, 0.5)
+    spi_XsReturns_monthly = spi_returns_monthly['SWISS PERFORMANCE INDEX - TOT RETURN IND'] - rf_monthly['monthly_return']
+    if isinstance(spi_XsReturns_monthly, pd.Series):
+        spi_XsReturns_monthly = spi_XsReturns_monthly.to_frame()
+    
+    # Rename Coluns for consistency
+    spi_XsReturns_monthly.columns = ['Benchmark']
+    spi_returns_monthly.columns = ['Benchmark']
+    
+    # ----- Run Backtest LONGONLY -----
+    excess_returns_longOnly, portfolio_weights_longOnly, turnover_series_longOnly, portfolio_returns_longOnly = momentum_strategy(
+        price_data_daily=price_data_daily,
+        lookback_period=lookback_period,
+        nLong=nLong,
+        nShort=0,
+        holding_period=holding_period,
+        rf_monthly=rf_monthly,
+        trx_cost=0
+    )
+    excess_returns_longOnly.columns = ['Xs Returns LongOnly']
+    portfolio_returns_longOnly.columns = ['Returns LongOnly']
+    
+    # Save results
+    excess_returns_longOnly.to_csv(results_path / "excess_returns_longOnly.csv", index=True, header=True)
+    portfolio_weights_longOnly.to_csv(results_path / "portfolio_weights_longOnly.csv", index=True, header=True)
+    turnover_series_longOnly.to_csv(results_path / "turnover_series_longOnly.csv", index=True, header=True)
+    stats_longOnly = summarize_performance(excess_returns_longOnly, rf_monthly, spi_XsReturns_monthly, 12)
+    save_summary_to_latex(stats_longOnly, summary_file_path_longOnly)
+    # -----
+    
+    # ----- Run Backtest LONG / SHORT -----
+    excess_returns_longShort, portfolio_weights_longShort, turnover_series_longShort, portfolio_returns_longShort = momentum_strategy(
         price_data_daily=price_data_daily,
         lookback_period=lookback_period,
         nLong=nLong,
@@ -55,34 +102,33 @@ def main():
         rf_monthly=rf_monthly,
         trx_cost=0
     )
+    excess_returns_longShort.columns = ['Xs Returns LongShort']
+    portfolio_returns_longShort.columns = ['Returns LongShort']
     
-    excess_returns.columns = ['Strategy_Returns']
-                  
     # Save results
-    excess_returns.to_csv(results_path / "excess_returns.csv", index=True, header=True)
-    portfolio_weights.to_csv(results_path / "portfolio_weights.csv", index=True, header=True)
-    turnover_series.to_csv(results_path / "turnover_series.csv", index=True, header=True)
+    excess_returns_longShort.to_csv(results_path / "excess_returns_longShort.csv", index=True, header=True)
+    portfolio_weights_longShort.to_csv(results_path / "portfolio_weights_longShort.csv", index=True, header=True)
+    turnover_series_longShort.to_csv(results_path / "turnover_series_longShort.csv", index=True, header=True)
+    stats_longShort = summarize_performance(excess_returns_longShort, rf_monthly, spi_XsReturns_monthly, 12)
+    save_summary_to_latex(stats_longShort, summary_file_path_longShort)
+    # -----
     
-    plot_cumulative_returns(excess_returns, filename=visualization_path / "cumulative_returns")
     
-    # read spi index data
-    # Load data 
-    spi_price_daily = load_data(spi_path)
+    # Custom labels
+    labels = {
+        'Strategy_Returns': 'Long Momentum Strategy',
+        'Benchmark': 'SPI',
+        'Portfolio_Returns': 'Long Momentum Strategy',
+        'xs_Return': 'Long Momentum Strategy',
+        'trx_cost_0.001': 'Strategy with Trx Cost: 0.1%',
+        'trx_cost_0.005': 'Strategy with Trx Cost: 0.5%',
+        'trx_cost_0.01': 'Strategy with Trx Cost: 1.0%',
+        }
     
-    # Resample data to monthly frequency and calculate returns
-    spi_price_monthly = spi_price_daily.resample('M').last()
+    # Create plot and save it
+    combined_returns = pd.concat([portfolio_returns_longOnly, portfolio_returns_longShort], axis=1)
+    plot_cumulative_returns(combined_returns, spi_returns_monthly, labels,filename=visualization_path / "cumulative_returns")
 
-    spi_returns_monthly = spi_price_monthly.pct_change()
- 
-    # Avoid massive outliers
-    spi_returns_monthly = np.clip(spi_returns_monthly, -0.5, 0.5)
-
-    spi_XsReturns_monthly = spi_returns_monthly['SWISS PERFORMANCE INDEX - TOT RETURN IND'] - rf_monthly['monthly_return']
-    
-    stats = summarize_performance(excess_returns, rf_monthly, spi_XsReturns_monthly, 12)
-
-    # Save the summary table for LaTeX
-    save_summary_to_latex(stats, summary_file_path)
     
     print("Performance summary saved successfully!")
     
@@ -96,7 +142,7 @@ def main():
             price_data_daily=price_data_daily,
             lookback_period=lookback_period,
             nLong=nLong,
-            nShort=nShort,
+            nShort=0,
             holding_period=i,
             rf_monthly=rf_monthly,
             trx_cost=0
@@ -110,6 +156,7 @@ def main():
     
     plotRobustnessChecks(
         rc_holding_period,
+        label = "Momentum Strategy",
         title='Sharpe Ratios over Holding Periods',
         x_label='Holding Period',
         y_label='Sharpe Ratio',
@@ -126,7 +173,7 @@ def main():
             price_data_daily=price_data_daily,
             lookback_period=i,
             nLong=nLong,
-            nShort=nShort,
+            nShort=0,
             holding_period=holding_period,
             rf_monthly=rf_monthly,
             trx_cost=0
@@ -140,6 +187,7 @@ def main():
     
     plotRobustnessChecks(
         rc_lookback_period,
+        label = "Momentum Strategy",
         title='Sharpe Ratios over Lookback Periods',
         x_label='Lookback Period',
         y_label='Sharpe Ratio',
@@ -156,7 +204,7 @@ def main():
             price_data_daily=price_data_daily,
             lookback_period=lookback_period,
             nLong=i,
-            nShort=i,
+            nShort=0,
             holding_period=holding_period,
             rf_monthly=rf_monthly,
             trx_cost=0
@@ -170,6 +218,7 @@ def main():
     
     plotRobustnessChecks(
         rc_number_assets,
+        label = "Momentum Strategy",
         title='Sharpe Ratios over Number Assets Long/Short',
         x_label='Number Assets Long/Short',
         y_label='Sharpe Ratio',
@@ -177,14 +226,11 @@ def main():
         filename=visualization_path / 'rc_number_assets.png'
     )
     
-    print(excess_returns.head)
-    print(excess_returns.shape)
-    print(type(excess_returns))
-    
+   
     
     # Over TRX cost
     # Initialize the DataFrame to hold the results
-    rc_trxCost_XsRet = excess_returns.copy()
+    rc_trxCost_XsRet = excess_returns_longOnly.copy()
     
     # List of transaction costs
     trxCosts = [0.001, 0.005, 0.01]
@@ -196,7 +242,7 @@ def main():
             price_data_daily=price_data_daily,
             lookback_period=lookback_period,
             nLong=20,
-            nShort=20,
+            nShort=0,
             holding_period=holding_period,
             rf_monthly=rf_monthly,
             trx_cost=trx_cost
@@ -213,23 +259,7 @@ def main():
         # Add the new column to the DataFrame
         rc_trxCost_XsRet[column_name] = portfolio_returnsTemp['Strategy_Returns']
     # plot here
-    plot_cumulative_returns(rc_trxCost_XsRet, title='Robustness Check Transaction Costs', x_label='Date', y_label='Cumulative Returns', figsize=(12,6), grid=True, savefig=True, filename=visualization_path / 'rc_trxCost.png')
-
-    print(rc_trxCost_XsRet.head)
-    print(rc_trxCost_XsRet.shape)
-    print(type(rc_trxCost_XsRet))
-    
-    
-    # Plot robustness checks
-    # plotRobustnessChecks(
-    #     df,
-    #     title='Sharpe Ratios over Holding Periods',
-    #     x_label='Holding Period',
-    #     y_label='Sharpe Ratio',
-    #     savefig=True,
-    #     filename=visualization_path / 'sharpe_ratios_robustness.png'
-    # )
-    
+    plot_cumulative_returns(rc_trxCost_XsRet, spi_returns_monthly, labels,title='Robustness Check Transaction Costs', x_label='Date', y_label='Cumulative Returns', figsize=(12,6), grid=True, savefig=True, filename=visualization_path / 'rc_trxCost.png')
 
     print("Results saved successfully!")
 
