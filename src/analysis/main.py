@@ -5,6 +5,8 @@ import seaborn as sns
 from pathlib import Path
 from load_data import load_data
 import sys
+import warnings
+import os
 
 # Add the project root directory to sys.path
 project_root = Path(__file__).resolve().parents[2]
@@ -15,9 +17,13 @@ from src.visualization.plotPerformance import plot_cumulative_returns
 from src.visualization.plotRobustnessChecks import plotRobustnessChecks
 from summarize_performance import summarize_performance, save_summary_to_latex
 from momentum_strategy_backtest import momentum_strategy
+from src.visualization.create_summary_table import create_summary_table
 
 
 def main():
+    venv_path = os.getenv('VIRTUAL_ENV')
+    print(venv_path)
+    warnings.simplefilter(action='ignore', category=FutureWarning)
     # Define the base path for file locations
     base_path = Path(__file__).resolve().parents[2]
 
@@ -113,6 +119,16 @@ def main():
     save_summary_to_latex(stats_longShort, summary_file_path_longShort)
     # -----
     
+    
+    ### Put together and print stats
+    # stats for benchmark itself
+    #stats_bm = summarize_performance(spi_XsReturns_monthly, rf_monthly, spi_XsReturns_monthly, 12,isBenchmark=True)
+    #print(stats_bm)
+    summaryTable = create_summary_table([stats_longOnly, stats_longShort], ['Long Only', 'Long Short'])
+    print(summaryTable)
+    
+    
+    ###
     
     # Custom labels
     labels = {

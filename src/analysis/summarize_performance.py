@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from scipy.stats import skew, kurtosis
 
-def summarize_performance(xs_returns, rf, factor_xs_returns, annualization_factor):
+def summarize_performance(xs_returns, rf, factor_xs_returns, annualization_factor, isBenchmark = False):
     # Check if inputs are Series, convert to DataFrame with column name "Return"
     if isinstance(xs_returns, pd.Series):
         xs_returns = xs_returns.to_frame(name='Return')
@@ -92,7 +92,6 @@ def summarize_performance(xs_returns, rf, factor_xs_returns, annualization_facto
         degrees_of_freedom = len(y) - X.shape[1]
         sse = np.sum(residuals ** 2)
         sigma_squared = sse / degrees_of_freedom
-
         cov_beta = sigma_squared * np.linalg.inv(X.T @ X)
         standard_errors = np.sqrt(np.diag(cov_beta))
         t_stats = beta_hat / standard_errors
@@ -100,9 +99,12 @@ def summarize_performance(xs_returns, rf, factor_xs_returns, annualization_facto
         alpha_arithmetic[col] = beta_hat[0]
         t_stat_alpha[col] = t_stats[0]
 
+
     betas_df = pd.DataFrame(betas).T
 
+
     bm_ret = factor_xs_returns.dot(betas_df.T) + rf
+
     final_bm_ret = (1 + bm_ret).prod()
     geom_avg_bm_return = 100 * (final_bm_ret ** (annualization_factor / n_periods) - 1)
     alpha_geometric = geom_avg_total_return - geom_avg_bm_return
@@ -127,6 +129,7 @@ def summarize_performance(xs_returns, rf, factor_xs_returns, annualization_facto
             'Lag 2': xs_returns[col].autocorr(lag=2),
             'Lag 3': xs_returns[col].autocorr(lag=3),
         }
+
 
     results = {
         'Arithmetic_Avg_Total_Return': arithm_avg_total_return,
