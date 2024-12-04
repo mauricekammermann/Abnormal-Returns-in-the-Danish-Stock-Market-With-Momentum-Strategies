@@ -210,4 +210,4 @@ def save_summary_to_latex(stats, file_path):
     # Write LaTeX table to file
     with open(file_path, 'w') as f:
         f.write(latex_table)
-    print(f"Summary saved to {file_path}")
+    #print(f"Summary saved to {file_path}")

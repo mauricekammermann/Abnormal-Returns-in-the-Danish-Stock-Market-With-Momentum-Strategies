@@ -123,7 +123,7 @@ def main():
         'trx_cost_0.001': 'Strategy with Trx Cost: 0.1%',
         'trx_cost_0.005': 'Strategy with Trx Cost: 0.5%',
         'trx_cost_0.01': 'Strategy with Trx Cost: 1.0%',
-        }
+    }
     
     # Create plot and save it
     combined_returns = pd.concat([portfolio_returns_longOnly, portfolio_returns_longShort], axis=1)

@@ -57,6 +57,6 @@ def plotRobustnessChecks(df, label='Series', title='Robustness Check', x_label='
     
     if savefig:
         plt.savefig(filename, dpi=300)
-        print(f"Plot saved as {filename}")
+        #print(f"Plot saved as {filename}")
     
     plt.show()
