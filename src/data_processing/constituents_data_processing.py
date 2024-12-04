@@ -17,9 +17,6 @@ def clean_data(df):
     # Rename the top-left cell to "date"
     df.iloc[0, 0] = "date"
     
-    # Drop the second column
-    df.drop(df.columns[1], axis=1, inplace=True)
-    
     # Set the fourth row as the header
     df.columns = df.iloc[0]
     df = df.drop(0)

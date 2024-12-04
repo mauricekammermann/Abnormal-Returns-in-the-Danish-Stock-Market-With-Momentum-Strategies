@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def plotRobustnessChecks(df, title='Robustness Check', x_label='Variable', y_label='Value', figsize=(12,6), grid=True, savefig=False, filename='robustness_check.png'):
+def plotRobustnessChecks(df, title='Robustness Check', x_label='Variable', y_label='Value', figsize=(12,6), grid=True, savefig=False, filename='robustness_check.png', linewidth=3):
     """
     Plots robustness checks over a variable (e.g., holding period) for each asset or strategy.
 
@@ -31,7 +31,7 @@ def plotRobustnessChecks(df, title='Robustness Check', x_label='Variable', y_lab
     df = df.dropna()
     
     # Use seaborn color palette
-    palette = sns.color_palette('husl', n_colors=len(df.columns))
+    palette = sns.color_palette('colorblind', n_colors=len(df.columns))
     
     # Plot
     plt.figure(figsize=figsize)
