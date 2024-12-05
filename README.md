@@ -9,8 +9,7 @@ This study examines the effectiveness of long-only momentum strategies in the Sw
 We invite you to take a look at our [report](reports/report/main_report.tex) and [beamer presentation](presentation/main_presentation.tex) (CHANGE REFERENCE TO PDF) with fully reproducible LaTeX source code. You can use Overleaf or Docker (see below) to compile the PDF yourself. Please also take a look at our [Jupyter Notebook](notebook/SPI_Momentum.ipynb) for interactive results, either on GitHub, Docker or on your local machine (see below as well, "Reproducibility of Project"). 
 
 CHANGE PICTURE TO PROPER/BUGFIXED PICTURE.
-![rc_trxCost](https://github.com/user-attachments/assets/514e60ef-94e7-4bba-8390-91f793502402)
-
+![rc_trxCost (1)](https://github.com/user-attachments/assets/9e2ab42f-0079-429f-9f8a-aa20721ff05c)
 
 ## Project Organization
 ------------
