@@ -60,7 +60,7 @@ def main():
     spi_price_daily = load_data(spi_path)
     
     # Resample data to monthly frequency and calculate returns
-    spi_price_monthly = spi_price_daily.resample('M').last()
+    spi_price_monthly = spi_price_daily.resample('ME').last()
     
     # Calculate Returns
     spi_returns_monthly = spi_price_monthly.pct_change()
@@ -246,36 +246,36 @@ def main():
     
     # Over TRX cost
     # Initialize the DataFrame to hold the results
-    rc_trxCost_XsRet = excess_returns_longOnly.copy()
+    rc_trxCost_return = portfolio_returns_longOnly.copy()
     
     # List of transaction costs
     trxCosts = [0.001, 0.005, 0.01]
     
     # Loop through transaction costs and add the new columns
-    for trx_cost in trxCosts:
+    for trx in trxCosts:
         # Run the momentum strategy, here we need total ret not xs ret, for plot
         _, _, _, portfolio_returnsTemp = momentum_strategy(
             price_data_daily=price_data_daily,
-            lookback_period=lookback_period,
+            lookback_period=6,
             nLong=20,
             nShort=0,
-            holding_period=holding_period,
+            holding_period=6,
             rf_monthly=rf_monthly,
-            trx_cost=trx_cost
+            trx_cost=trx
         )
         if isinstance(portfolio_returnsTemp, pd.Series):
             portfolio_returnsTemp = portfolio_returnsTemp.to_frame()
         portfolio_returnsTemp.columns = ['Strategy_Returns']
 
         # Generate the column name dynamically
-        column_name = f"trx_cost_{trx_cost}"
+        column_name = f"trx_cost_{trx}"
         print(portfolio_returnsTemp.head)
         print(portfolio_returnsTemp.shape)
         print(type(portfolio_returnsTemp))
         # Add the new column to the DataFrame
-        rc_trxCost_XsRet[column_name] = portfolio_returnsTemp['Strategy_Returns']
+        rc_trxCost_return[column_name] = portfolio_returnsTemp['Strategy_Returns']
     # plot here
-    plot_cumulative_returns(rc_trxCost_XsRet, spi_returns_monthly, labels,title='Robustness Check Transaction Costs', x_label='Date', y_label='Cumulative Returns', figsize=(12,6), grid=True, savefig=True, filename=visualization_path / 'rc_trxCost.png')
+    plot_cumulative_returns(rc_trxCost_return, spi_returns_monthly, labels,title='Robustness Check Transaction Costs', x_label='Date', y_label='Cumulative Returns', figsize=(12,6), grid=True, savefig=True, filename=visualization_path / 'rc_trxCost.png')
 
     print("Results saved successfully!")
 
