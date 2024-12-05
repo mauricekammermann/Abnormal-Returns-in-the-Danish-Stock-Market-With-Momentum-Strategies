@@ -132,13 +132,13 @@ def main():
     
     # Custom labels
     labels = {
-        'Strategy_Returns': 'Long Momentum Strategy',
+        'Strategy_Returns': 'Long Only Strategy',
         'Benchmark': 'SPI',
-        'Portfolio_Returns': 'Long Momentum Strategy',
-        'xs_Return': 'Long Momentum Strategy',
-        'trx_cost_0.001': 'Strategy with Trx Cost: 0.1%',
-        'trx_cost_0.005': 'Strategy with Trx Cost: 0.5%',
-        'trx_cost_0.01': 'Strategy with Trx Cost: 1.0%',
+        'Portfolio_Returns': 'Long Only Strategy',
+        'xs_Return': 'Long Only Strategy',
+        'trx_cost_0.001': 'Long Only with Trx Cost: 0.1%',
+        'trx_cost_0.005': 'Long Only with Trx Cost: 0.5%',
+        'trx_cost_0.01': 'Long Only with Trx Cost: 1.0%',
     }
     
     # Create plot and save it
@@ -172,7 +172,7 @@ def main():
     
     plotRobustnessChecks(
         rc_holding_period,
-        label = "Momentum Strategy",
+        label = "Long Only Strategy",
         title='Sharpe Ratios over Holding Periods',
         x_label='Holding Period',
         y_label='Sharpe Ratio',
@@ -203,7 +203,7 @@ def main():
     
     plotRobustnessChecks(
         rc_lookback_period,
-        label = "Momentum Strategy",
+        label = "Long Only Strategy",
         title='Sharpe Ratios over Lookback Periods',
         x_label='Lookback Period',
         y_label='Sharpe Ratio',
@@ -234,9 +234,9 @@ def main():
     
     plotRobustnessChecks(
         rc_number_assets,
-        label = "Momentum Strategy",
-        title='Sharpe Ratios over Number Assets Long/Short',
-        x_label='Number Assets Long/Short',
+        label = "Long Only Strategy",
+        title='Sharpe Ratios over Number Assets Long',
+        x_label='Number Assets Long',
         y_label='Sharpe Ratio',
         savefig=True,
         filename=visualization_path / 'rc_number_assets.png'
