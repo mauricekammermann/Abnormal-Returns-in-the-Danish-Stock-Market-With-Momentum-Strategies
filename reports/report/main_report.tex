@@ -1,6 +1,7 @@
 \documentclass[a4paper,12pt]{article}
 \usepackage{style_report} %See style_report.sty for detailed packages
 
+
 \addbibresource{references_report.bib}
 
 %header and page nrs
@@ -100,13 +101,20 @@ Our methodology works as follows: We rank the constituents of the SPI based on t
 %Results
 \section{Results}
 We examine the performance of long-only and long/short momentum strategies in the Swiss market, evaluating them against the SPI benchmark. To identify general trends, we initially analyze these strategies without factoring in transaction costs.
+
+
 \begin{table}[htbp]
 \centering
-\begin{tabular}{lrrr}
+\sisetup{
+    round-mode=places,
+    round-precision=2,
+    table-format=2.2
+}
+\begin{tabular}{lSSS}
 \toprule
 \multirow{2}{*}{Metric} & \multicolumn{3}{c}{Strategies} \\
 \cmidrule(l){2-4}
-& Long-Only & Long/Short & Benchmark \\
+& {Long-Only} & {Long/Short} & {Benchmark} \\
 \midrule
 Arithmetic Avg Total Return & 10.8041 & 19.0110 & 2.4043 \\
 Arithmetic Avg Excess Return & 8.9813 & 17.1881 & 0.4947 \\
