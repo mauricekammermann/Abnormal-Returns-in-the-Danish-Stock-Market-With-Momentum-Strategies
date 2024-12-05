@@ -1,10 +1,12 @@
-\documentclass{beamer}
+ \documentclass[10pt]{beamer}
+ \usepackage{style_presentation} %See style_presentation.sty for detailed packages
 
 %put this all into mybib because its ugly
-\usepackage{graphicx} % Required for inserting images
-\usepackage{xcolor}
 \usetheme{Madrid}
 \definecolor{teall}{RGB}{5, 77, 79}
+\definecolor{strategyblue}{RGB}{51, 102, 153}
+\definecolor{datagreen}{RGB}{34, 139, 34}
+\definecolor{boxbg}{RGB}{245, 245, 245} % Light gray for box background
 \usecolortheme[named=teall]{structure}
 
 %footnote
@@ -22,7 +24,7 @@
 
 %Titlepage
 \title{Swiss Performance Index Momentum Strategy}
-\subtitle{Group Work Assignment: Digital Tools for Finance}
+\subtitle{Project Paper: Digital Tools for Finance}
 \author{Iris Bodenmann, Justin Meichtry, Maurice Kammermann, Steve Nikitas}
 \titlegraphic{\includegraphics[height=1.5cm]{Universität_Zürich_logo.png}}
 \date{11th of December 2024}
@@ -43,10 +45,99 @@
 \section{Introduction}
 \begin{frame}{Introduction}
 \begin{itemize}
-    \item this
-    \item is
-    \item a
-    \item test
+    \item Momentum ranks among the most pervasive stock market anomalies, serving as a cornerstone for extensive research and investment strategies.
+    \item Our project investigates the efficacy of long-only momentum strategies, as introduced by Jegadeesh and Titman (1993), in delivering excess returns within the Swiss stock market over the period from 2000 to 2024.
+    \item By focusing on the Swiss market, this study sheds light on momentum effects in a smaller, less-researched and less liquid market, contributing to the understanding of anomaly persistence across different contexts.
+    \item The findings aim to bridge the gap between academic theory and practical application, offering insights for investors in designing robust market strategies.
 \end{itemize}
 \end{frame}
+
+
+
+% Data and Methodology
+\section{Data and Methodology}
+\begin{frame}[fragile]{Methodology}
+
+\noindent % Ensure no indentation
+\begin{minipage}[t]{0.45\textwidth} % Left box
+    \begin{tcolorbox}[colframe=datagreen, colback=boxbg, coltitle=white, title=Data, sharp corners=all, fonttitle=\bfseries, left=2mm, right=2mm, enhanced, height=6cm]
+        Swiss stock market was proxied using the SPI. 
+        \begin{itemize}
+            \item \textbf{Benchmark:} SPI Total Return Index. Daily data from Refinitiv.
+            \item \textbf{Risk-Free:} 1-year Swiss government bond yield. Monthly data from SNB API.
+            \item \textbf{Time Period:} January 2000 - November 2024
+        \end{itemize}
+    \end{tcolorbox}
+\end{minipage}%
+\hspace{0.05\textwidth} % Horizontal spacing
+\begin{minipage}[t]{0.45\textwidth} % Right box
+    \begin{tcolorbox}[colframe=strategyblue, colback=boxbg, coltitle=white, title=Methodology, sharp corners=all, fonttitle=\bfseries, left=2mm, right=2mm, enhanced, height=6cm]
+        \begin{itemize}
+            \item \textbf{Holding Period:} 6 months
+            \item \textbf{Lookback Period:} 6 months
+            \item \textbf{Weighting:} Equally weighted
+            \item \textbf{Rebalancing:} Monthly
+            \item \textbf{Transaction costs:} Proportional, up to 1\%
+            
+        \end{itemize}
+    \end{tcolorbox}
+\end{minipage}
+
+\end{frame}
+
+% Results
+\begin{frame}{Results}
+    \begin{center}
+        {\footnotesize \textbf{Cumulative Returns: Long Only Momentum and Long/Short Performance vs. SPI}}
+        \vspace{0.5cm} % Adjust spacing as needed
+        \includegraphics[width=\linewidth]{cumulative_returns.png}
+    \end{center}
+\end{frame}
+
+%Robustness Check
+\section{Robustness Check}
+\begin{frame}{Robustness Check}
+
+We explored the variability of various parameters that may impact performance and cost-effectiveness:
+
+\begin{itemize}
+    \item Holding period
+    \item Lookback period
+    \item Number of assets held
+    \item Transaction costs    
+\end{itemize}
+\end{frame}
+
+
+%Conclusion
+\section{Conclusion}
+\begin{frame}{Conclusion}
+
+\begin{itemize}
+    \item Long-only momentum strategy generates substantial outperformance compared to the SPI benchmark, even after accounting for transaction costs.
+    \item Long-only underperformed relative to the corresponding long/short strategy.
+    \item A negative relationship between holding periods and Sharpe ratios exists, suggesting shorter holding periods may be more effective.
+    \item The lookback period analysis showed a peak in performance at around 10 months. 
+    \item Resilience to transaction costs, remaining profitable even with costs up to 1\%.      
+\end{itemize}
+\end{frame}
+
+%References
+\section{References}
+\begin{frame}{References}
+
+\begin{itemize}
+    \item Ammann, M. and M. Steiner (2008). “Risk Factors for the Swiss Stock
+Market”. In: Schweizerische Zeitschrift f¨ur Volkswirtschaft und Statistik
+144(1), pp. 1–35. doi: 10.1007/BF03399247.
+    \item De Bondt, W. F. and R. Thaler (1987). “Further Evidence on Investor
+Overreaction and Stock Market Seasonality”. In: The Journal of Finance
+42(3), pp. 557–581. doi: 10.1111/j.1540-6261.1987.tb04569.x.
+    \item Jegadeesh, N. and S. Titman (1993). “Returns to Buying Winners and Selling Losers: Implications for Stock Market Efficiency”. In: The Journal of Finance 48(1), pp. 65–91. doi: 10.2307/2328882.
+    \item Rouwenhorst, G. K. (1998). “International Momentum Strategies”. In: The Journal of Finance 53(1), pp. 276–284. doi: 10.1111/0022-1082.95722.
+
+    
+\end{itemize}
+\end{frame}
+
 \end{document}
