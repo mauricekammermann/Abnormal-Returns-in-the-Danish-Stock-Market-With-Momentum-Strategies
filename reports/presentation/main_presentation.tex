@@ -1,6 +1,19 @@
+<<<<<<< HEAD
 \documentclass[10pt]{beamer}
 \usepackage{style_presentation} %See style_presentation.sty for detailed packages
 \addbibresource{references_presentation.bib}
+=======
+ \documentclass[10pt]{beamer}
+ \usepackage{style_presentation} %See style_presentation.sty for detailed packages
+
+%put this all into mybib because its ugly
+\usetheme{Madrid}
+\definecolor{teall}{RGB}{5, 77, 79}
+\definecolor{strategyblue}{RGB}{51, 102, 153}
+\definecolor{datagreen}{RGB}{34, 139, 34}
+\definecolor{boxbg}{RGB}{245, 245, 245} % Light gray for box background
+\usecolortheme[named=teall]{structure}
+>>>>>>> 1a19774ded2f08b42fe103161d958e218e36807a
 
 %footnote
 \setbeamertemplate{navigation symbols}{}
@@ -39,7 +52,11 @@
 \begin{frame}{Introduction}
 \begin{itemize}
     \item Momentum ranks among the most pervasive stock market anomalies, serving as a cornerstone for extensive research and investment strategies.
+<<<<<<< HEAD
     \item Our project investigates the efficacy of long-only momentum strategies, as introduced by \cite{jegatit1993}, in delivering excess returns within the Swiss stock market over the period from 2000 to 2024.
+=======
+    \item Our project investigates the efficacy of long-only momentum strategies, as introduced by Jegadeesh and Titman (1993), in delivering excess returns within the Swiss stock market over the period from 2000 to 2024.
+>>>>>>> 1a19774ded2f08b42fe103161d958e218e36807a
     \item By focusing on the Swiss market, this study sheds light on momentum effects in a smaller, less-researched and less liquid market, contributing to the understanding of anomaly persistence across different contexts.
     \item The findings aim to bridge the gap between academic theory and practical application, offering insights for investors in designing robust market strategies.
 \end{itemize}
@@ -49,7 +66,11 @@
 
 % Data and Methodology
 \section{Data and Methodology}
+<<<<<<< HEAD
 \begin{frame}[fragile]{Data and Methodology}
+=======
+\begin{frame}[fragile]{Methodology}
+>>>>>>> 1a19774ded2f08b42fe103161d958e218e36807a
 
 \noindent % Ensure no indentation
 \begin{minipage}[t]{0.45\textwidth} % Left box
@@ -79,6 +100,7 @@
 \end{frame}
 
 % Results
+<<<<<<< HEAD
 \section{Results}
 \begin{frame}{Results: Long Only and Long/Short Momentum vs. SPI}
    \begin{figure}
@@ -118,6 +140,14 @@ Beta (Factor Return) & 0.8642 & -0.4478 & 1.0000 \\
 \end{table}
 
 
+=======
+\begin{frame}{Results}
+    \begin{center}
+        {\footnotesize \textbf{Cumulative Returns: Net-Cumulative Total Returns Long Only Momentum vs. SPI}}
+        \vspace{0.5cm} % Adjust spacing as needed
+        \includegraphics[width=\linewidth]{rc_trxCost.png}
+    \end{center}
+>>>>>>> 1a19774ded2f08b42fe103161d958e218e36807a
 \end{frame}
 
 
@@ -135,6 +165,7 @@ We explored the variability of various parameters that may impact performance an
 \end{itemize}
 \end{frame}
 
+<<<<<<< HEAD
 \begin{frame}{Robustness Check: Varying Holding Period Months}
   \begin{figure}
    \caption{Sharpe Ratios Over Different Holding Period Months}
@@ -166,6 +197,8 @@ We explored the variability of various parameters that may impact performance an
         \includegraphics[width=\linewidth]{figures/rc_trxCost.png}
     \end{figure}
 \end{frame}
+=======
+>>>>>>> 1a19774ded2f08b42fe103161d958e218e36807a
 
 %Conclusion
 \section{Conclusion}
@@ -176,9 +209,13 @@ We explored the variability of various parameters that may impact performance an
     \item Long-only underperformed relative to the corresponding long/short strategy.
     \item A negative relationship between holding periods and Sharpe ratios exists, suggesting shorter holding periods may be more effective.
     \item The lookback period analysis showed a peak in performance at around 10 months. 
+<<<<<<< HEAD
     \item Increasing number of assets held increases Sharpe Ratio due to diversification effects, which diminish at a certain amount of assets.
     \item Resilience to transaction costs, remaining profitable even with costs up to 1\%.  
     \item In short: Momentum strategies can be profitable but careful consideration must be given to parameters such as holding period, lookback period, number of assets held and, most importantly, the investment universe. 
+=======
+    \item Resilience to transaction costs, remaining profitable even with costs up to 1\%.      
+>>>>>>> 1a19774ded2f08b42fe103161d958e218e36807a
 \end{itemize}
 \end{frame}
 
@@ -186,9 +223,24 @@ We explored the variability of various parameters that may impact performance an
 \section{References}
 \begin{frame}{References}
 
+<<<<<<< HEAD
 \printbibliography
 
 
+=======
+\begin{itemize}
+    \item Ammann, M. and M. Steiner (2008). “Risk Factors for the Swiss Stock
+Market”. In: Schweizerische Zeitschrift f¨ur Volkswirtschaft und Statistik
+144(1), pp. 1–35. doi: 10.1007/BF03399247.
+    \item De Bondt, W. F. and R. Thaler (1987). “Further Evidence on Investor
+Overreaction and Stock Market Seasonality”. In: The Journal of Finance
+42(3), pp. 557–581. doi: 10.1111/j.1540-6261.1987.tb04569.x.
+    \item Jegadeesh, N. and S. Titman (1993). “Returns to Buying Winners and Selling Losers: Implications for Stock Market Efficiency”. In: The Journal of Finance 48(1), pp. 65–91. doi: 10.2307/2328882.
+    \item Rouwenhorst, G. K. (1998). “International Momentum Strategies”. In: The Journal of Finance 53(1), pp. 276–284. doi: 10.1111/0022-1082.95722.
+
+    
+\end{itemize}
+>>>>>>> 1a19774ded2f08b42fe103161d958e218e36807a
 \end{frame}
 
 \end{document}

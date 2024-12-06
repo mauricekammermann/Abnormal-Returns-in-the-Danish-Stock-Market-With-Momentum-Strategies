@@ -6,9 +6,8 @@ The momentum effect describes the tendency of assets that have performed well in
 
 This study examines the effectiveness of long-only momentum strategies in the Swiss stock market from 2000 to 2024, using constituents of the Swiss Performance Index (SPI) as a proxy. The robustness of these strategies is tested by varying lookback periods, holding periods, and transaction costs. Our results indicate that long-only momentum strategies in the Swiss market can indeed generate significant abnormal net returns, even after accounting for transaction costs, and outperform the SPI benchmark. However, consistent with previous research, the profitability of these strategies decreases notably with higher transaction costs due to portfolio turnover. Despite that, in terms of overall performance, long/short momentum strategies appear to outperform their long-only counterparts.
 
-We invite you to take a look at our [report](reports/report/main_report.tex) and [beamer presentation](presentation/main_presentation.tex) (CHANGE REFERENCE TO PDF) with fully reproducible LaTeX source code. You can use Overleaf or Docker (see below) to compile the PDF yourself. Please also take a look at our [Jupyter Notebook](notebook/SPI_Momentum.ipynb) for interactive results, either on GitHub, Docker or on your local machine (see below as well, "Reproducibility of Project"). 
+We invite you to take a look at our [report](reports/report/SPI-Momentum_Report.pdf) and [beamer presentation](presentation/main_presentation.tex) (CHANGE REFERENCE TO PDF) with fully reproducible LaTeX source code. You can use Overleaf or Docker (see below) to compile the PDF yourself. Please also take a look at our [Jupyter Notebook](notebook/SPI_Momentum.ipynb) for interactive results, either on GitHub, Docker or on your local machine (see below as well, "Reproducibility of Project"). 
 
-CHANGE PICTURE TO PROPER/BUGFIXED PICTURE.
 ![rc_trxCost (1)](https://github.com/user-attachments/assets/9e2ab42f-0079-429f-9f8a-aa20721ff05c)
 
 ## Project Organization
