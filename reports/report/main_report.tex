@@ -1,6 +1,7 @@
 \documentclass[a4paper,12pt]{article}
 \usepackage{style_report} %See style_report.sty for detailed packages
 
+
 \addbibresource{references_report.bib}
 
 %header and page nrs
@@ -62,7 +63,7 @@
 \pagenumbering{arabic}
 \setcounter{page}{1}
 \section{Introduction}
-The momentum effect, a prominent market anomaly first documented by \cite{jegatit1993}, continues to intrigue researchers and challenge the efficient market hypothesis. This study examines the momentum effect in the Swiss stock market, focusing on individual stocks and accounting for transaction costs. Our primary aim is to replicate the work of \cite{jegatit1993} within the Swiss stock market context. We investigate whether the long-only momentum effect persists in Switzerland to this day and to what extent it can generate abnormal returns. Importantly, we address the most significant drawback of momentum strategies: transaction costs, which diminish returns due to frequent portfolio turnover. By doing so, we tackle the practical challenges of implementing such strategies in real-world conditions. 
+The momentum effect, a prominent market anomaly first documented by \cite{jegatit1993}, continues to intrigue researchers and challenge the efficient market hypothesis. This study examines the momentum effect in the Swiss stock market, focusing on individual stocks and accounting for transaction costs. Our primary aim is to replicate the work of \cite{jegatit1993} within the Swiss stock market context. We investigate whether the long-only momentum effect persists in Switzerland to this day and to what extent it can generate abnormal returns. By focusing on the Swiss market, this study sheds light on momentum effects in a smaller, less-researched and less liquid market, contributing to the understanding of anomaly persistence across different contexts. Importantly, we address the most significant drawback of momentum strategies: transaction costs, which diminish returns due to frequent portfolio turnover. By doing so, we tackle the practical challenges of implementing such strategies in real-world conditions. 
 
 We proxy the Swiss stock market using the Swiss Performance Index (SPI). Our dataset comprises daily data for all 205 constituents of the SPI from January 2000 to October 2024, obtained from Bloomberg. To account for the risk-free rate, we use the yield of 1-year Swiss government bonds. The dataset has been cleaned to remove unnecessary information and is free from survivorship bias. 
 
@@ -88,7 +89,7 @@ Specifically for the Swiss market, \cite{rouwenhorst1998} included Switzerland i
 %Data and Methodology
 \section{Data and Methodology}
 \subsection{Data}
-The Swiss stock market was proxied using the SPI. Daily total return data for the SPI and its 205 constituents were obtained from Refinitiv Datastream, covering the period from 2000 to 2024. The risk-free rate data, represented by the monthly yield of a 1-year Swiss government bond for the same period, were retrieved from the Swiss National Bank (SNB) API. The data set was cleaned for unnecessary information (e.g. currency, empty columns) and constructed to avoid survivorship bias.
+The Swiss stock market was proxied using the SPI. Daily total return data for the SPI and its 205 constituents were obtained from Refinitiv Datastream, covering the period from January 2000 to October 2024. The risk-free rate data, represented by the monthly yield of a 1-year Swiss government bond for the same period, were retrieved from the Swiss National Bank (SNB) API. The data set was cleaned for unnecessary information (e.g. currency, empty columns) and constructed to avoid survivorship bias.
 
 \subsection{Methodology}
 Our methodology works as follows: We rank the constituents of the SPI based on their past 6-month performance. Equally weighted Portfolios are then formed using the top 20 performing stocks and held for a 6-month period and rebalanced every month. To enhance robustness, we incorporate several variations in our analysis. We test different lookback and holding periods (e.g., 3, 9, and 12 months) to assess the strategy's sensitivity to these parameters. We also simulate various levels of transaction costs to evaluate their impact on performance, acknowledging practical implementation challenges. Additionally, the reader has the ability to adjust all these parameters in the Jupyter Notebook. 
@@ -100,13 +101,20 @@ Our methodology works as follows: We rank the constituents of the SPI based on t
 %Results
 \section{Results}
 We examine the performance of long-only and long/short momentum strategies in the Swiss market, evaluating them against the SPI benchmark. To identify general trends, we initially analyze these strategies without factoring in transaction costs.
+
+
 \begin{table}[htbp]
 \centering
-\begin{tabular}{lrrr}
+\sisetup{
+    round-mode=places,
+    round-precision=2,
+    table-format=2.2
+}
+\begin{tabular}{lSSS}
 \toprule
 \multirow{2}{*}{Metric} & \multicolumn{3}{c}{Strategies} \\
 \cmidrule(l){2-4}
-& Long-Only & Long/Short & Benchmark \\
+& {Long-Only} & {Long/Short} & {Benchmark} \\
 \midrule
 Arithmetic Avg Total Return & 10.8041 & 19.0110 & 2.4043 \\
 Arithmetic Avg Excess Return & 8.9813 & 17.1881 & 0.4947 \\
