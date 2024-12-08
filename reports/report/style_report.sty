@@ -1,19 +1,37 @@
-%general packages
+% style_report.sty
+
+% General Packages
 \usepackage{graphicx}
-\usepackage{natbib}
 \usepackage{booktabs}
 \usepackage{multirow}
-\usepackage[
-    backend=biber,
-    style=bwl-FU,
-    url=false,
-    doi=true,
-    eprint=false
-]{biblatex}
 \usepackage{parskip}
 \usepackage{dcolumn}
 \usepackage{ragged2e}
 \usepackage{siunitx}
-%headers and page nr
+
+% Bibliography Configuration using biblatex
+\usepackage[
+    backend=biber,
+    style=bwl-FU,  % Ensure that 'bwl-FU' style is available or replace with an existing style
+    url=false,
+    doi=true,
+    eprint=false
+]{biblatex}
+
+% Header and Page Numbering
 \usepackage{fancyhdr}
 \usepackage{titlesec}
+
+% Additional Packages
+\usepackage{float}  % For improved figure placement control
+\usepackage{hyperref}  % For hyperlinks in the document
+\usepackage{caption}  % For customizing captions
+
+% Graphics Path
+\graphicspath{{../figures/}}  % Points to the figures folder relative to the 'report' folder
+
+% siunitx Configuration (if needed)
+\sisetup{
+    detect-weight=true,
+    detect-family=true
+}

@@ -8,7 +8,7 @@ ENV PYTHONUNBUFFERED=1
 # Set working directory inside the container
 WORKDIR /app
 
-# Install system dependencies
+# Install system dependencies, including LaTeX packages and biber
 RUN apt-get update && apt-get install -y \
     build-essential \
     libssl-dev \
@@ -30,12 +30,26 @@ RUN apt-get update && apt-get install -y \
 # Upgrade pip
 RUN pip install --upgrade pip
 
-# Copy requirements.txt and install Python dependencies
+# Install Jupyter Lab
+RUN pip install jupyterlab
+
+# Copy requirements.txt and install Python dependencies (if any)
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code
 COPY . .
+
+# Copy the entire reports folder into the container
+COPY reports /app/reports
+
+# Compile the LaTeX document
+RUN cd /app/reports/report && \
+    pdflatex main_report.tex && \
+    biber main_report && \
+    pdflatex main_report.tex && \
+    pdflatex main_report.tex
+
 
 # Expose port 8888 for Jupyter Notebook
 EXPOSE 8888
