@@ -15,7 +15,7 @@ We invite you to take a look at our [report](reports/report/SPI-Momentum_Report.
 
     ├── README.md                    <- The top-level README for developers using this project, including requirements and updating solutions.
     ├── Dockerfile                   <- Dockerfile to recreate the entire project in Docker.
-    ├── SPI_momentum.yaml            <- .yaml file with requirements to create environment in Docker.
+    ├── requirements.txt             <- .txt file with requirements to create environment in Docker.
     ├── data
     │   ├── processed                <- Final data sets that can be used for modeling.
     │   ├── interim                  <- Intermediate data that has been transformed.
@@ -24,7 +24,7 @@ We invite you to take a look at our [report](reports/report/SPI-Momentum_Report.
     │
     ├── notebook                     <- Juptyer Notebook for interactive results.
     ├── reports                      <- Generated analysis as PDF, LaTeX, etc.
-    │   ├── report                   <- Final report as PDF and LaTex.
+    │   ├── report                   <- Final report as PDF and LaTeX.
     │   ├── presentation             <- Final presentation as PDF and LaTex.
     │   └── figures                  <- Generated graphics, plots and figures used in reporting.
     │
