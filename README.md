@@ -62,11 +62,11 @@ git clone https://github.com/mauricekammermann/SPI-Momentum.git
 cd SPI-Momentum #please adjust name accordingly
 docker build -t spi-momentum .
 ```
-4. Run the Docker container (optional: in interactive mode)
+4. Run the Docker container. The Jupyter server should start in the background. You can copy paste the URL in the terminal and run the [Jupyter Notebook](notebook/SPI_Momentum.ipynb).
 ```bash
 docker run -it -p 8888:8888 spi-momentum #omit -it if not needed
 ```
-4. Feel free to compile the .tex documents yourself with `pdflatex`
+5. Feel free to compile the .tex documents yourself with `pdflatex`
 ```bash
 docker run -it -p 8818:8818 spi-momentum bash
 
@@ -78,6 +78,6 @@ pdflatex main_report.tex
 cd reports/presentation/
 pdflatex main_presentation.tex
 ```
-5. Please run the [Jupyter Notebook](notebook/SPI_Momentum.ipynb)
+
 
 
