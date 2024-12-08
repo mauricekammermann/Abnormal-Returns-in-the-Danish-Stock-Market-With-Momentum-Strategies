@@ -57,7 +57,7 @@ git clone https://github.com/mauricekammermann/SPI-Momentum.git
 
 2. If you do not have Docker installed, please do so: [Docker Installation Guide](https://docs.docker.com/engine/install/)
 
-3. Change directory where you cloned the repo and build Docker image.
+3. Change the directory to where you cloned the repo to before, and build Docker image.
 ```bash
 cd SPI-Momentum #please adjust name accordingly
 docker build -t spi-momentum .
