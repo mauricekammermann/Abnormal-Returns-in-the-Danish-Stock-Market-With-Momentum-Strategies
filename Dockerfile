@@ -30,18 +30,12 @@ RUN apt-get update && apt-get install -y \
 # Upgrade pip
 RUN pip install --upgrade pip
 
-# Install Jupyter Lab
-RUN pip install jupyterlab
-
 # Copy requirements.txt and install Python dependencies (if any)
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code
 COPY . .
-
-# Copy the entire reports folder into the container
-COPY reports /app/reports
 
 # Compile the LaTeX document
 RUN cd /app/reports/report && \
