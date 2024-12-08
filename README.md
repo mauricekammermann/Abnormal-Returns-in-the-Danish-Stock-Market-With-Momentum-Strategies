@@ -42,45 +42,29 @@ The [provided data processors](src/data_processing) clean the .xlsx and .csv by 
 
 Updating the data could work as follows, assuming you have access to a Datastream-Refinitiv portal:
 1. Download and open the Excel files ([SPI_Index_Data](data/raw/SPI_Index_Data.xlsx) & [SPI_Constituents_Data](data/raw/SPI_Constituents_Data.xlsx)) and and pull the newest data.
-2. Fetch the newest SNB data with the [data_fetcher_snb.py](datafeed/data_fetcher_snb.py), adjusting the API link with the desired dates. It should be saved automatically in [data/raw](data/raw) as `snb_yield_data.csv`.
+2. Adjust the API link in [data_fetcher_snb](src/data_processing/data_fetcher_snb.py) with the desired dates. 
 3. Then, please run the data processor [main.py](src/data_processing/main.py). The processed .csv files should be automatically saved in [data/processed](data/processed) with the correct name.
 
 If desired to use own data, please place the desired .xlsx files in [data/raw](data/raw), named and structured identically to the current files, and run the data processors in [src/data_processing](src/data_processing). If you wish to analyze a different market than the Swiss market, please replace the data in [data/raw](data/raw) with data from your chosen country, maintaining the original file structure. The data processor should still work, but please adjust the input and output file names in the data processor scripts in [src/data_processing](src/data_processing) to match your new data files and desired output names. Furthermore, update the file names in the source code located in [analysis](src/analysis) to reference the newly processed data files. 
 
-## Reproducibility of Project
-This entire project aims to be fully reproducible. In order to do this, we provide two methods of replicating our project: (1) GitHub Repo Cloning and (2) Docker Containerization.  
-### (1) GitHub Repo Cloning
-Describe how to clone repo and how to run jupyter notebook and how to compile LaTeX.
+## Reproducibility of Project: Docker
+This entire project aims to be fully reproducible, thus it has been fully Dockerized for easier deployment. Follow these steps if you want to use docker. 
 
-### (2) Docker
-This entire project has been Dockerized for easier deployment and ensuring full reproducibility. Follow these steps if you want to use docker:
+1. Please clone our repo on your local machine in the desired location. 
+```bash
+git clone https://github.com/mauricekammermann/SPI-Momentum.git
+```
 
-SHOW HOW TO COMPILE LATEX AS WELL!
-1. Install Docker
+2. If you do not have Docker installed, please do so: [Docker Installation Guide](https://docs.docker.com/engine/install/)
+
+3. Change directory where you cloned the repo and build Docker image.
 ```bash
-    Installation guide
+cd SPI-Momentum #please adjust name accordingly
+docker build -t spi-momentum .
 ```
-2. Build Docker container with Docker image
+4. Run the Docker container
 ```bash
-    Installation guide
+docker run -p 8888:8888 spi-momentum
 ```
-3. Run the Docker container
-```bash
-    Installation guide
-```
-4. Activate the virtual environemnt
-```bash
-    Installation guide
-```
-5. Optional: Converting the Jupyter Notebook to a .py file, if desired
-```bash
-    Installation guide
-```
-6. Start the Jupyter notebook server in the background
-```bash
-    Installation guide
-```
-7. Optional: Running the Python file intead of Jupyter notebook:
-```bash
-    Installation guide
-```
+4. Please run the [Jupyter Notebook](notebook/SPI_Momentum.ipynb) and feel free to compile the .tex documents yourself with `pdflatex`
+
