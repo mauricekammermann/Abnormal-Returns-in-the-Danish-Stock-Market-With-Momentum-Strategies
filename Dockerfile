@@ -16,6 +16,15 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libxslt1-dev \
     zlib1g-dev \
+    texlive-latex-base \
+    texlive-latex-extra \
+    texlive-fonts-recommended \
+    texlive-fonts-extra \
+    texlive-xetex \
+    texlive-bibtex-extra \
+    texlive-science \
+    biber \
+    lmodern \
     && rm -rf /var/lib/apt/lists/*
 
 # Upgrade pip
