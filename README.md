@@ -74,17 +74,19 @@ docker run -it -p 8818:8818 spi-momentum bash #First, run the Docker container i
 ```
 ```bash
 #compiling report as pdf
-cd reports/report
-pdflatex main_report.tex
-biber main_report
-pdflatex main_report.tex
-pdflatex main_report.tex
+docker run -it spi-momentum /bin/bash -c "cd /app/reports/report && pdflatex main_report.tex && biber main_report && pdflatex main_report.tex && pdflatex main_report.tex"
+#compiling report as pdf and save it localy
+docker run -it -v "/mnt/your_path_to_project_folder/SPI-Momentum/reports/report:/app/reports/report" spi-momentum /bin/bash -c "cd /app/reports/report && pdflatex main_report.tex && biber main_report && pdflatex main_report.tex && pdflatex main_report.tex"
 ```
 ```bash
 #compiling beamer as pdf
 cd reports/presentation/
 pdflatex main_presentation.tex
 ```
-
+6. Run Main code `pdflatex`
+```bash
+#compiling main code
+docker run -it spi-momentum /bin/bash -c "cd /app/src/analysis && python main.py"
+```
 
 
