@@ -33,7 +33,19 @@ Temporary Items
 # Jupyter Notebook
 .ipynb_checkpoints
 
-
+# Ignore LaTeX auxiliary files
+*.aux
+*.bcf
+*.lof
+*.lot
+*.out
+*.run
+*.toc
+*.bbl
+*.blg
+*.synctex.gz
+*.fls
+*.fdb_latexmk
 
 # 
 __pycache__
