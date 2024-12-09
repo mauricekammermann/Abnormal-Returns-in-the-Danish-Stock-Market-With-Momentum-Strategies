@@ -71,11 +71,13 @@ docker run -it -p 8888:8888 spi-momentum #omit -it if not needed
 5. Feel free to compile the .tex documents yourself with `pdflatex`
 ```bash
 docker run -it -p 8818:8818 spi-momentum bash #First, run the Docker container in interactive mode
-
+```
+```bash
 #compiling report as pdf
 cd reports/report/
 pdflatex main_report.tex
-
+```
+```bash
 #compiling beamer as pdf
 cd reports/presentation/
 pdflatex main_presentation.tex
