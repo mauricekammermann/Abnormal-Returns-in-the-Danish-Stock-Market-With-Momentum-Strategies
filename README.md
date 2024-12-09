@@ -76,21 +76,20 @@ docker run -it -p 8818:8818 spi-momentum bash #First, run the Docker container i
 #compiling report as pdf
 docker run -it spi-momentum /bin/bash -c "cd /app/reports/report && pdflatex main_report.tex && biber main_report && pdflatex main_report.tex && pdflatex main_report.tex"
 #compiling report as pdf and save it localy
-docker run -it -v "/mnt/your_path_to_project_folder/SPI-Momentum/reports/report:/app/reports/report" spi-momentum /bin/bash -c "cd /app/reports/report && pdflatex main_report.tex && biber main_report && pdflatex main_report.tex && pdflatex main_report.tex"
+docker run -it -v "$(pwd)/reports/report:/app/reports/report" spi-momentum /bin/bash -c "cd /app/reports/report && pdflatex main_report.tex && biber main_report && pdflatex main_report.tex && pdflatex main_report.tex"
 ```
 ```bash
 #compiling report as pdf
 docker run -it spi-momentum /bin/bash -c "cd /app/reports/presentation && pdflatex main_presentation.tex && biber main_presentation && pdflatex main_presentation.tex && pdflatex main_presentation.tex"
 #compiling beamer as pdf and save it localy
-docker run -it -v "/mnt/c/your_path_to_project_folder/SPI-Momentum/reports/presentation:/app/reports/presentation" spi-momentum /bin/bash -c "cd /app/reports/presentation && pdflatex main_presentation.tex && biber main_presentation && pdflatex main_presentation.tex && pdflatex main_presentation.tex"
-
+docker run -it -v "$(pwd)/reports/presentation:/app/reports/presentation" spi-momentum /bin/bash -c "cd /app/reports/presentation && pdflatex main_presentation.tex && biber main_presentation && pdflatex main_presentation.tex && pdflatex main_presentation.tex"
 ```
 6. Run Main code 
 ```bash
 #compiling main code
 docker run -it spi-momentum /bin/bash -c "cd /app/src/analysis && python main.py"
 #compiling main code and save localy
-docker run -it -v "/mnt/c/your_path_to_project_folder/SPI-Momentum/src:/app/src" spi-momentum /bin/bash -c "cd /app/src/analysis && python main.py"
+docker run -it -v "$(pwd)/src:/app/src" spi-momentum /bin/bash -c "cd /app/src/analysis && python main.py"
 ```
 
 
