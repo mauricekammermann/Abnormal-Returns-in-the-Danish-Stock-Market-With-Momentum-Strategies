@@ -48,14 +48,14 @@ Updating the data could work as follows, assuming you have access to a Datastrea
 If desired to use own data, please place the desired .xlsx files in [data/raw](data/raw), named and structured identically to the current files, and run the data processors in [src/data_processing](src/data_processing). If you wish to analyze a different market than the Swiss market, please replace the data in [data/raw](data/raw) with data from your chosen country, maintaining the original file structure. The data processor should still work, but please adjust the input and output file names in the data processor scripts in [src/data_processing](src/data_processing) to match your new data files and desired output names. Furthermore, update the file names in the source code located in [analysis](src/analysis) to reference the newly processed data files. 
 
 ## Reproducibility of Project: Docker
-This entire project aims to be fully reproducible, thus it has been fully Dockerized for easier deployment. Follow these steps if you want to use docker. 
+This entire project aims to be fully reproducible, thus it has been fully Dockerized for easier deployment. Follow these steps if you want to use docker. We recommend using [WSL](https://learn.microsoft.com/en-us/windows/wsl/install).
 
 1. Please clone our repo on your local machine in the desired location. 
 ```bash
 git clone https://github.com/mauricekammermann/SPI-Momentum.git
 ```
 
-2. If you do not have Docker installed, please do so: [Docker Installation Guide](https://docs.docker.com/engine/install/)
+2. If you do not have Git and Docker installed, please do so: [Git Installating Guide](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker Installation Guide](https://docs.docker.com/engine/install/).
 
 3. Change the directory to where you cloned the repo to before, and build Docker image.
 ```bash
