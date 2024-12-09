@@ -1,8 +1,8 @@
 \documentclass[10pt]{beamer}
-\usepackage{style_presentation} %See style_presentation.sty for detailed packages
+\usepackage{style_presentation} % See style_presentation.sty for detailed packages
 \addbibresource{references_presentation.bib}
 
-%footnote
+% Footnote
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{footline}{}
 \setbeamertemplate{footline}{%
@@ -15,7 +15,7 @@
 \setbeamercolor{page number in head/foot}{fg=black}
 \sisetup{round-mode=places, round-precision=2}
 
-%Titlepage
+% Titlepage
 \title{Swiss Performance Index Momentum Strategy}
 \subtitle{Project Paper: Digital Tools for Finance}
 \author{Iris Bodenmann, Justin Meichtry, Maurice Kammermann, Steve Nikitas}
@@ -28,13 +28,13 @@
 \maketitle
 \end{frame}
 
-%Table of Contents
+% Table of Contents
 \begin{frame}
 \frametitle{Table of Contents}
 \tableofcontents
 \end{frame}
 
-%Introduction
+% Introduction
 \section{Introduction}
 \begin{frame}{Introduction}
 \begin{itemize}
@@ -44,8 +44,6 @@
     \item The findings aim to bridge the gap between academic theory and practical application, offering insights for investors in designing robust market strategies.
 \end{itemize}
 \end{frame}
-
-
 
 % Data and Methodology
 \section{Data and Methodology}
@@ -71,7 +69,6 @@
             \item \textbf{Weighting:} Equally weighted
             \item \textbf{Rebalancing:} Monthly
             \item \textbf{Transaction costs:} Proportional, up to 1\%
-            
         \end{itemize}
     \end{tcolorbox}
 \end{minipage}
@@ -84,7 +81,7 @@
    \begin{figure}
    \caption{Cumulative Total Returns: Long Only and Long/Short Momentum vs. SPI}
         \centering
-        \includegraphics[width=\linewidth]{figures/cumulative_returns.png}
+        \includegraphics[width=\linewidth]{../figures/cumulative_returns.png}
     \end{figure}
 \end{frame}
 
@@ -116,11 +113,9 @@ Beta (Factor Return) & 0.8642 & -0.4478 & 1.0000 \\
 \caption{Summary Statistics Long-Only and Long/Short vs. Benchmark}
 \end{table}
 
-
 \end{frame}
 
-
-%Robustness Check
+% Robustness Check
 \section{Robustness Check}
 \begin{frame}{Robustness Check}
 
@@ -138,7 +133,7 @@ We explored the variability of various parameters that may impact performance an
   \begin{figure}
    \caption{Sharpe Ratios Over Different Holding Period Months}
         \centering
-        \includegraphics[width=\linewidth]{figures/rc_holding_period.png}
+        \includegraphics[width=\linewidth]{../figures/rc_holding_period.png}
     \end{figure}
 \end{frame}
 
@@ -146,7 +141,7 @@ We explored the variability of various parameters that may impact performance an
   \begin{figure}
    \caption{Sharpe Ratios Over Different Lookback Period Months}
         \centering
-        \includegraphics[width=\linewidth]{figures/rc_lookback_period.png}
+        \includegraphics[width=\linewidth]{../figures/rc_lookback_period.png}
     \end{figure}
 \end{frame}
 
@@ -154,7 +149,7 @@ We explored the variability of various parameters that may impact performance an
   \begin{figure}
    \caption{Sharpe Ratios Over Different Number of Assets Held}
         \centering
-        \includegraphics[width=\linewidth]{figures/rc_number_assets.png}
+        \includegraphics[width=\linewidth]{../figures/rc_number_assets.png}
     \end{figure}
 \end{frame}
 
@@ -162,11 +157,11 @@ We explored the variability of various parameters that may impact performance an
   \begin{figure}
    \caption{Net-Cumulative Total Returns: Long Only Momentum vs. SPI}
         \centering
-        \includegraphics[width=\linewidth]{figures/rc_trxCost.png}
+        \includegraphics[width=\linewidth]{../figures/rc_trxCost.png}
     \end{figure}
 \end{frame}
 
-%Conclusion
+% Conclusion
 \section{Conclusion}
 \begin{frame}{Conclusion}
 
@@ -181,12 +176,11 @@ We explored the variability of various parameters that may impact performance an
 \end{itemize}
 \end{frame}
 
-%References
+% References
 \section{References}
 \begin{frame}{References}
 
 \printbibliography
-
 
 \end{frame}
 

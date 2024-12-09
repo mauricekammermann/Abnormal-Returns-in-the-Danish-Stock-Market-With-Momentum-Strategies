@@ -1,11 +1,11 @@
-%general packages
+% General packages
 \usepackage{graphicx} % Required for inserting images
 \usepackage{xcolor}
-\usepackage{tcolorbox}
+\usepackage[most]{tcolorbox} % Updated to load most libraries, including 'enhanced'
 \usepackage[utf8]{inputenc}
 \usepackage[
     backend=biber,
-    style=bwl-FU,
+    style=authoryear, % Ensure this is set to 'authoryear'
     url=false,
     doi=true,
     eprint=false
@@ -13,7 +13,8 @@
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{siunitx}
-%colors
+
+% Colors
 \usetheme{Madrid}
 \definecolor{teall}{RGB}{9, 88, 145}
 \definecolor{strategyblue}{RGB}{9, 157, 119}
