@@ -73,12 +73,24 @@ docker run -it -p 8818:8818 spi-momentum bash #First, run the Docker container i
 ```
 5. Feel free to compile the .tex documents yourself with `pdflatex`
 ```bash
+#compiling report as pdf in interactive container
+cd /app/reports/report
+pdflatex main_report.tex
+biber main_report
+pdflatex main_report.tex
+pdflatex main_report.tex
 #compiling report as pdf
 docker run -it spi-momentum /bin/bash -c "cd /app/reports/report && pdflatex main_report.tex && biber main_report && pdflatex main_report.tex && pdflatex main_report.tex"
 #compiling report as pdf and save it localy
 docker run -it -v "$(pwd)/reports/report:/app/reports/report" spi-momentum /bin/bash -c "cd /app/reports/report && pdflatex main_report.tex && biber main_report && pdflatex main_report.tex && pdflatex main_report.tex"
 ```
 ```bash
+#compiling presentation as pdf in interactive container
+cd /app/reports/presentation
+pdflatex main_presentation.tex
+biber main_presentation
+pdflatex main_presentation.tex
+pdflatex main_presentation.tex
 #compiling report as pdf
 docker run -it spi-momentum /bin/bash -c "cd /app/reports/presentation && pdflatex main_presentation.tex && biber main_presentation && pdflatex main_presentation.tex && pdflatex main_presentation.tex"
 #compiling beamer as pdf and save it localy
@@ -86,6 +98,9 @@ docker run -it -v "$(pwd)/reports/presentation:/app/reports/presentation" spi-mo
 ```
 6. Run Main code 
 ```bash
+#compiling main code in interactive container
+cd /app/src/analysis
+python main.py
 #compiling main code
 docker run -it spi-momentum /bin/bash -c "cd /app/src/analysis && python main.py"
 #compiling main code and save localy
