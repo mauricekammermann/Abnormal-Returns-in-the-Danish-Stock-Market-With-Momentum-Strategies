@@ -57,9 +57,11 @@ git clone https://github.com/mauricekammermann/SPI-Momentum.git
 
 2. If you do not have Git and Docker installed, please do so: [Git Installating Guide](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker Installation Guide](https://docs.docker.com/engine/install/).
 
-3. Change the directory to where you cloned the repo to before, and build Docker image.
+3. Change the directory to where you cloned the repo to, and build Docker image.
 ```bash
 cd SPI-Momentum #please adjust name accordingly
+```
+```bash
 docker build -t spi-momentum .
 ```
 4. Run the Docker container. The Jupyter server should start in the background. You can copy paste the URL in the terminal and run the [Jupyter Notebook](notebook/SPI_Momentum.ipynb).
@@ -68,7 +70,7 @@ docker run -it -p 8888:8888 spi-momentum #omit -it if not needed
 ```
 5. Feel free to compile the .tex documents yourself with `pdflatex`
 ```bash
-docker run -it -p 8818:8818 spi-momentum bash
+docker run -it -p 8818:8818 spi-momentum bash #First, run the Docker container in interactive mode
 
 #compiling report as pdf
 cd reports/report/
