@@ -74,7 +74,10 @@ docker run -it -p 8818:8818 spi-momentum bash #First, run the Docker container i
 ```
 ```bash
 #compiling report as pdf
-cd reports/report/
+cd reports/report
+pdflatex main_report.tex
+biber main_report
+pdflatex main_report.tex
 pdflatex main_report.tex
 ```
 ```bash
