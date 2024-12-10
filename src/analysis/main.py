@@ -23,7 +23,6 @@ from summarize_performance import summarize_performance, save_summary_to_latex
 from momentum_strategy_backtest import momentum_strategy
 from src.visualization.create_summary_table import create_summary_table
 
-
 def main():
     venv_path = os.getenv('VIRTUAL_ENV')
     print(venv_path)
@@ -41,16 +40,16 @@ def main():
     visualization_path = base_path / "reports" / "figures"
 
     # Debug: Print the constructed file paths
-    print(f"Constituent Data Path: {constituents_data_path}")
-    print(f"Risk-Free Monthly Returns Path: {rf_monthly_path}")
-    print(f"Results Path: {results_path}")
+    #print(f"Constituent Data Path: {constituents_data_path}")
+    #print(f"Risk-Free Monthly Returns Path: {rf_monthly_path}")
+    #print(f"Results Path: {results_path}")
 
     # Ensure the results directory exists
     # results_path.mkdir(parents=True, exist_ok=True)
 
     # Load risk-free monthly returns
     rf_monthly = load_data(rf_monthly_path)
-    print("Loaded risk-free monthly returns:")
+    #print("Loaded risk-free monthly returns:")
 
     # Strategy parameters
     lookback_period = 6  # Number of months to look back
@@ -91,6 +90,8 @@ def main():
         rf_monthly=rf_monthly,
         trx_cost=0
     )
+    
+    
     excess_returns_longOnly.columns = ['Xs Returns LongOnly']
     portfolio_returns_longOnly.columns = ['Returns LongOnly']
     
@@ -98,9 +99,9 @@ def main():
     excess_returns_longOnly.to_csv(results_path / "excess_returns_longOnly.csv", index=True, header=True)
     portfolio_weights_longOnly.to_csv(results_path / "portfolio_weights_longOnly.csv", index=True, header=True)
     turnover_series_longOnly.to_csv(results_path / "turnover_series_longOnly.csv", index=True, header=True)
-    stats_longOnly = summarize_performance(excess_returns_longOnly, rf_monthly, spi_XsReturns_monthly, 12)
+    stats_longOnly = summarize_performance(excess_returns_longOnly, rf_monthly, spi_XsReturns_monthly, 12, isBenchmark=False)
+    #print(f"Results Summarize Peformance: {stats_longOnly}")
     save_summary_to_latex(stats_longOnly, summary_file_path_longOnly)
-    # -----
     
     # ----- Run Backtest LONG / SHORT -----
     excess_returns_longShort, portfolio_weights_longShort, turnover_series_longShort, portfolio_returns_longShort = momentum_strategy(
@@ -119,16 +120,20 @@ def main():
     excess_returns_longShort.to_csv(results_path / "excess_returns_longShort.csv", index=True, header=True)
     portfolio_weights_longShort.to_csv(results_path / "portfolio_weights_longShort.csv", index=True, header=True)
     turnover_series_longShort.to_csv(results_path / "turnover_series_longShort.csv", index=True, header=True)
-    stats_longShort = summarize_performance(excess_returns_longShort, rf_monthly, spi_XsReturns_monthly, 12)
+    stats_longShort = summarize_performance(excess_returns_longShort, rf_monthly, spi_XsReturns_monthly, 12, isBenchmark=False)
+    #print(f"Results Summarize Peformance: {stats_longShort}")
     save_summary_to_latex(stats_longShort, summary_file_path_longShort)
     # -----
     
+    ### Put together and print stats
+    # stats for benchmark itself
     
     ### Put together and print stats
     # stats for benchmark itself
-    #stats_bm = summarize_performance(spi_XsReturns_monthly, rf_monthly, spi_XsReturns_monthly, 12,isBenchmark=True)
-    #print(stats_bm)
-    summaryTable = create_summary_table([stats_longOnly, stats_longShort], ['Long Only', 'Long Short'])
+    stats_bm = summarize_performance(spi_XsReturns_monthly, rf_monthly, spi_XsReturns_monthly, 12, isBenchmark=True)
+
+    # Create Summary Table
+    summaryTable = create_summary_table([stats_longOnly, stats_longShort, stats_bm], ['Long Only', 'Long Short', "Benchmark"])
     print(summaryTable)
     
     
@@ -246,7 +251,6 @@ def main():
         filename=visualization_path / 'rc_number_assets.png'
     )
     
-   
     
     # Over TRX cost
     # Initialize the DataFrame to hold the results
@@ -273,9 +277,7 @@ def main():
 
         # Generate the column name dynamically
         column_name = f"trx_cost_{trx}"
-        print(portfolio_returnsTemp.head)
-        print(portfolio_returnsTemp.shape)
-        print(type(portfolio_returnsTemp))
+
         # Add the new column to the DataFrame
         rc_trxCost_return[column_name] = portfolio_returnsTemp['Strategy_Returns']
     # plot here

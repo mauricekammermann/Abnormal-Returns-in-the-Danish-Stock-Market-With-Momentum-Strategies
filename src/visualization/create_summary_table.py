@@ -1,6 +1,6 @@
 import pandas as pd
 from prettytable import PrettyTable
-
+import numpy as np
 
 def create_summary_table(dicts, labels):
     """
@@ -17,6 +17,29 @@ def create_summary_table(dicts, labels):
     if len(dicts) != len(labels):
         raise ValueError("The number of labels must match the number of dictionaries.")
     
+    # Define readable metric names
+    readable_metrics = {
+        'Arithmetic_Avg_Total_Return': 'Arithmetic Avg Total Return', 
+        'Arithmetic_Avg_Excess_Return': 'Arithmetic Avg Excess Return',
+        'Geometric_Avg_Total_Return': 'Geometric Avg Total Return',
+        'Geometric_Avg_Excess_Return': 'Geometric Avg Excess Return',
+        'Std_of_Excess_Returns_Annualized': 'Std of Excess Returns (Annualized)',
+        'Sharpe_Ratio_Arithmetic': 'Sharpe Ratio (Arithmetic)',
+        'Sharpe_Ratio_Geometric': 'Sharpe Ratio (Geometric)',
+        'Min_Excess_Return': 'Min Excess Return',
+        'Max_Excess_Return': 'Max Excess Return',
+        'Skewness_of_Excess_Return': 'Skewness of Excess Return',
+        'Kurtosis_of_Excess_Return': 'Kurtosis of Excess Return',
+        'Alpha_Arithmetic': 'Alpha (Arithmetic)',
+        'Alpha_Geometric': 'Alpha (Geometric)',
+        'T_stat_of_Alpha': 'T-stat of Alpha',
+        'Beta': 'Beta (Factor Return)',
+        'Std_Dev_of_Excess_Returns': 'Std Dev of Excess Returns',
+        'Monthly_Excess_Return': 'Monthly Excess Return',
+        'T_stat_of_Monthly_Excess_Return': 'T-stat of Monthly Excess Return',
+        'Autocorrelations': 'Autocorrelations',
+    }
+    
     # Create a list to store rows for the final DataFrame
     summary_rows = []
     row_index = []
@@ -31,30 +54,77 @@ def create_summary_table(dicts, labels):
             for lag in ['Lag 1', 'Lag 2', 'Lag 3']:
                 row = []
                 for d in dicts:
-                    row.append(d['Autocorrelations']['xs_Return'][lag])
+                    # Determine which return to access ('Benchmark_Return' or 'xs_Return')
+                    if 'Benchmark_Return' in d['Autocorrelations']:
+                        autocorr = d['Autocorrelations']['Benchmark_Return'].get(lag, np.nan)
+                    else:
+                        autocorr = d['Autocorrelations']['xs_Return'].get(lag, np.nan)
+                    
+                    # Replace NaN with 'N/A'
+                    if pd.isna(autocorr):
+                        row.append('N/A')
+                    else:
+                        row.append(round(autocorr, 4))
                 summary_rows.append(row)
-                row_index.append(f'AC {lag}')
+                row_index.append(f'Autocorr {lag}')
         else:
             row = []
             for d in dicts:
                 # Handle 'Beta' as a special case to extract the value properly
                 if key == 'Beta':
-                    row.append(d['Beta'].loc['xs_Return', 'Benchmark'])
+                    try:
+                        # For Benchmark, Beta is 1.0
+                        if 'Benchmark_Return' in d['Beta'].index:
+                            beta_val = d['Beta'].loc['Benchmark_Return', 'Benchmark']
+                        else:
+                            beta_val = d['Beta'].loc['xs_Return', 'Benchmark']
+                        # Replace NaN with 'N/A'
+                        if pd.isna(beta_val):
+                            row.append('N/A')
+                        else:
+                            row.append(round(beta_val, 4))
+                    except (KeyError, AttributeError):
+                        row.append('N/A')
                 else:
-                    row.append(d[key]['xs_Return'])
+                    # Access the metric value safely
+                    if 'Benchmark_Return' in d:
+                        # For Benchmark, access 'Benchmark_Return'
+                        if isinstance(d[key], dict):
+                            metric_val = d[key].get('Benchmark_Return', np.nan)
+                        else:
+                            metric_val = d[key]
+                    else:
+                        # For strategies, access 'xs_Return'
+                        if isinstance(d[key], dict):
+                            metric_val = d[key].get('xs_Return', np.nan)
+                        else:
+                            metric_val = d[key]
+                    
+                    # If it's a Series, extract the first value
+                    if isinstance(metric_val, pd.Series):
+                        metric_val = metric_val.iloc[0] if not metric_val.empty else np.nan
+                    
+                    # Replace NaN with 'N/A'
+                    if pd.isna(metric_val):
+                        row.append('N/A')
+                    else:
+                        row.append(round(metric_val, 4))
             summary_rows.append(row)
-            row_index.append(key)
+            # Map the metric name to its readable format, defaulting to the original name
+            readable_metric = readable_metrics.get(key, key)
+            row_index.append(readable_metric)
 
     # Create DataFrame from the summary rows
-    summary_df = pd.DataFrame(summary_rows, index=row_index, columns=labels).round(2)
-    
-    # Create PrettyTable instance
+    summary_df = pd.DataFrame(summary_rows, index=row_index, columns=labels)
+
+    # Create PrettyTable instance (optional)
     table = PrettyTable()
     table.field_names = ["Metric"] + summary_df.columns.tolist()
-    
-    for row in summary_df.itertuples():
-        table.add_row([row.Index] + list(row[1:]))
-    
-    #print(table)
+
+    for metric, row in summary_df.iterrows():
+        table.add_row([metric] + list(row))
+
+    # Optionally, print the table
+    # print(table)
 
     return summary_df
