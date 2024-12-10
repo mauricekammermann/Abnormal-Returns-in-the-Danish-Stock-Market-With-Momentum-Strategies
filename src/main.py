@@ -3,13 +3,12 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 from pathlib import Path
-from load_data import load_data
 import sys
 import warnings
 import os
 
 # Add the project root directory to sys.path
-project_root = Path(__file__).resolve().parents[2]
+project_root = Path(__file__).resolve().parents[1]
 sys.path.append(str(project_root))
 
 # Add the `src` directory to `sys.path`
@@ -19,16 +18,15 @@ sys.path.append(str(src_path))
 # Load other funcitons
 from src.visualization.plotPerformance import plot_cumulative_returns
 from src.visualization.plotRobustnessChecks import plotRobustnessChecks
-from summarize_performance import summarize_performance, save_summary_to_latex
-from momentum_strategy_backtest import momentum_strategy
+from src.analysis.summarize_performance import summarize_performance, save_summary_to_latex
+from src.analysis.momentum_strategy_backtest import momentum_strategy
 from src.visualization.create_summary_table import create_summary_table
+from src.analysis.load_data import load_data
 
 def main():
-    venv_path = os.getenv('VIRTUAL_ENV')
-    print(venv_path)
-    warnings.simplefilter(action='ignore', category=FutureWarning)
+
     # Define the base path for file locations
-    base_path = Path(__file__).resolve().parents[2]
+    base_path = Path(__file__).resolve().parents[1]
 
     # Construct file paths dynamically
     constituents_data_path = base_path / "data" / "processed" / "constituents_data.csv"
@@ -37,19 +35,12 @@ def main():
     spi_path = base_path / "data" / "processed" / "index_data.csv"
     summary_file_path_longOnly = results_path / "summary_performance_longOnly.tex"
     summary_file_path_longShort = results_path / "summary_performance_longShort.tex"
+    summary_file_path_bm = results_path / "summary_performance_benchmark.tex"
     visualization_path = base_path / "reports" / "figures"
-
-    # Debug: Print the constructed file paths
-    #print(f"Constituent Data Path: {constituents_data_path}")
-    #print(f"Risk-Free Monthly Returns Path: {rf_monthly_path}")
-    #print(f"Results Path: {results_path}")
-
-    # Ensure the results directory exists
-    # results_path.mkdir(parents=True, exist_ok=True)
 
     # Load risk-free monthly returns
     rf_monthly = load_data(rf_monthly_path)
-    #print("Loaded risk-free monthly returns:")
+    print("Loaded risk-free monthly returns:")
 
     # Strategy parameters
     lookback_period = 6  # Number of months to look back
@@ -91,7 +82,6 @@ def main():
         trx_cost=0
     )
     
-    
     excess_returns_longOnly.columns = ['Xs Returns LongOnly']
     portfolio_returns_longOnly.columns = ['Returns LongOnly']
     
@@ -132,6 +122,7 @@ def main():
     # stats for benchmark itself
     stats_bm = summarize_performance(spi_XsReturns_monthly, rf_monthly, spi_XsReturns_monthly, 12, isBenchmark=True)
 
+
     # Create Summary Table
     summaryTable = create_summary_table([stats_longOnly, stats_longShort, stats_bm], ['Long Only', 'Long Short', "Benchmark"])
     print(summaryTable)
@@ -154,7 +145,6 @@ def main():
     combined_returns = pd.concat([portfolio_returns_longOnly, portfolio_returns_longShort], axis=1)
     plot_cumulative_returns(combined_returns, spi_returns_monthly, labels,filename=visualization_path / "cumulative_returns")
 
-    
     print("Performance summary saved successfully!")
     
     # Robustness checks
