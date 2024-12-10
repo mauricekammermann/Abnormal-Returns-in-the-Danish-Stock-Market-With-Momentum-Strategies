@@ -99,12 +99,12 @@ docker run -it -v "$(pwd)/reports/presentation:/app/reports/presentation" spi-mo
 6. Run Main code 
 ```bash
 #compiling main code in interactive container
-cd /app/src/analysis
+cd /app/src
 python main.py
 #compiling main code
-docker run -it spi-momentum /bin/bash -c "cd /app/src/analysis && python main.py"
+docker run -it spi-momentum /bin/bash -c "cd /app/src && python main.py"
 #compiling main code and save localy
-docker run -it -v "$(pwd)/src:/app/src" spi-momentum /bin/bash -c "cd /app/src/analysis && python main.py"
+docker run -it -v "$(pwd)/src:/app/src" spi-momentum /bin/bash -c "cd /app/src && python main.py"
 ```
 
 
