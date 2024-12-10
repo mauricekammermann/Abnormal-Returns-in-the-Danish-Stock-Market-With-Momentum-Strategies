@@ -68,10 +68,11 @@ docker build -t spi-momentum .
 ```bash
 docker run -p 8888:8888 spi-momentum #In non-interactive mode
 ```
-```bash
-docker run -it -p 8818:8818 spi-momentum bash #In interactive mode (recommended)
-```
 5. Feel free to compile the .tex documents yourself either on [Overleaf](https://www.overleaf.com/) or with `pdflatex`
+```bash
+#running in interactive mode
+docker run -it -p 8818:8818 spi-momentum bash 
+```
 ```bash
 #compiling report as pdf in interactive container
 cd /app/reports/report
