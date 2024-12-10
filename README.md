@@ -82,7 +82,7 @@ pdflatex main_report.tex
 pdflatex main_report.tex #might need to rerun to ensure proper compiling
 #compiling report as pdf directly
 docker run -it spi-momentum /bin/bash -c "cd /app/reports/report && pdflatex main_report.tex && biber main_report && pdflatex main_report.tex && pdflatex main_report.tex"
-#compiling report as pdf and save it locally
+#compiling report as pdf directly and save it locally
 docker run -it -v "$(pwd)/reports/report:/app/reports/report" spi-momentum /bin/bash -c "cd /app/reports/report && pdflatex main_report.tex && biber main_report && pdflatex main_report.tex && pdflatex main_report.tex"
 ```
 ```bash
@@ -94,7 +94,7 @@ pdflatex main_presentation.tex
 pdflatex main_presentation.tex #might need to rerun to ensure proper compiling
 #compiling report as pdf directly
 docker run -it spi-momentum /bin/bash -c "cd /app/reports/presentation && pdflatex main_presentation.tex && biber main_presentation && pdflatex main_presentation.tex && pdflatex main_presentation.tex"
-#compiling beamer as pdf and save it locally
+#compiling beamer as pdf directly and save it locally
 docker run -it -v "$(pwd)/reports/presentation:/app/reports/presentation" spi-momentum /bin/bash -c "cd /app/reports/presentation && pdflatex main_presentation.tex && biber main_presentation && pdflatex main_presentation.tex && pdflatex main_presentation.tex"
 ```
 6. Run Main code 
@@ -104,7 +104,7 @@ cd /app/src
 python main.py
 #compiling main code directly
 docker run -it spi-momentum /bin/bash -c "cd /app/src && python main.py"
-#compiling main code and save locally
+#compiling main code directly and save locally
 docker run -it -v "$(pwd)/src:/app/src" spi-momentum /bin/bash -c "cd /app/src && python main.py"
 ```
 
