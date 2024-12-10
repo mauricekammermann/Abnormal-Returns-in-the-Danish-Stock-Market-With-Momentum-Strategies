@@ -9,6 +9,14 @@ import sys
 import warnings
 import os
 
+# Determine the project root (two levels up from the current file)
+project_root = Path(__file__).resolve().parents[1]
+sys.path.append(str(project_root))
+src_path = project_root / "src"
+
+# Add the `src` directory to `sys.path`
+sys.path.append(str(src_path))
+
 # Absolute imports
 from src.visualization.plotPerformance import plot_cumulative_returns
 from src.visualization.plotRobustnessChecks import plotRobustnessChecks
@@ -170,7 +178,7 @@ def main():
         price_data_daily=price_data_daily,
         lookback_period_range=lookback_period_range,
         nLong=nLong,
-        nShort=nShort,
+        nShort=0,
         holding_period=holding_period,
         rf_monthly=rf_monthly,
         spi_XsReturns_monthly=spi_XsReturns_monthly,
@@ -182,7 +190,7 @@ def main():
         price_data_daily=price_data_daily,
         lookback_period=lookback_period,
         nLong_range=nLong_range,
-        nShort=nShort,
+        nShort=0,
         holding_period=holding_period,
         rf_monthly=rf_monthly,
         spi_XsReturns_monthly=spi_XsReturns_monthly,
@@ -194,7 +202,7 @@ def main():
         price_data_daily=price_data_daily,
         lookback_period=lookback_period,
         nLong=nLong,
-        nShort=nShort,
+        nShort=0,
         holding_period=holding_period,
         rf_monthly=rf_monthly,
         spi_returns_monthly=spi_returns_monthly,
