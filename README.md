@@ -66,10 +66,10 @@ docker build -t spi-momentum .
 ```
 4. Run the Docker container. The Jupyter server should start in the background. You can copy paste the URL in the terminal and run the [Jupyter Notebook](notebook/SPI_Momentum.ipynb).
 ```bash
-docker run -it -p 8888:8888 spi-momentum #omit -it if not needed
+docker run -p 8888:8888 spi-momentum #In non-interactive mode
 ```
 ```bash
-docker run -it -p 8818:8818 spi-momentum bash #First, run the Docker container in interactive mode
+docker run -it -p 8818:8818 spi-momentum bash #In interactive mode (recommended)
 ```
 5. Feel free to compile the .tex documents yourself either on [Overleaf](https://www.overleaf.com/) or with `pdflatex`
 ```bash
