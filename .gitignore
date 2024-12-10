@@ -35,6 +35,8 @@ Temporary Items
 
 # Ignore LaTeX auxiliary files
 *.aux
+*.log
+*.run.xml
 *.bcf
 *.lof
 *.lot
