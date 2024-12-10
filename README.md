@@ -78,7 +78,7 @@ cd /app/reports/report
 pdflatex main_report.tex
 biber main_report
 pdflatex main_report.tex
-pdflatex main_report.tex
+pdflatex main_report.tex #might need to rerun to ensure proper compiling
 #compiling report as pdf
 docker run -it spi-momentum /bin/bash -c "cd /app/reports/report && pdflatex main_report.tex && biber main_report && pdflatex main_report.tex && pdflatex main_report.tex"
 #compiling report as pdf and save it localy
@@ -89,8 +89,8 @@ docker run -it -v "$(pwd)/reports/report:/app/reports/report" spi-momentum /bin/
 cd /app/reports/presentation
 pdflatex main_presentation.tex
 biber main_presentation
-pdflatex main_presentation.tex
-pdflatex main_presentation.tex
+pdflatex main_presentation.tex 
+pdflatex main_presentation.tex #might need to rerun to ensure proper compiling
 #compiling report as pdf
 docker run -it spi-momentum /bin/bash -c "cd /app/reports/presentation && pdflatex main_presentation.tex && biber main_presentation && pdflatex main_presentation.tex && pdflatex main_presentation.tex"
 #compiling beamer as pdf and save it localy
