@@ -12,6 +12,10 @@ import os
 project_root = Path(__file__).resolve().parents[2]
 sys.path.append(str(project_root))
 
+# Add the `src` directory to `sys.path`
+src_path = project_root / "src"
+sys.path.append(str(src_path))
+
 # Load other funcitons
 from src.visualization.plotPerformance import plot_cumulative_returns
 from src.visualization.plotRobustnessChecks import plotRobustnessChecks
