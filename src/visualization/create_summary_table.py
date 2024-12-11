@@ -54,77 +54,61 @@ def create_summary_table(dicts, labels):
             for lag in ['Lag 1', 'Lag 2', 'Lag 3']:
                 row = []
                 for d in dicts:
-                    # Determine which return to access ('Benchmark_Return' or 'xs_Return')
                     if 'Benchmark_Return' in d['Autocorrelations']:
                         autocorr = d['Autocorrelations']['Benchmark_Return'].get(lag, np.nan)
                     else:
                         autocorr = d['Autocorrelations']['xs_Return'].get(lag, np.nan)
                     
-                    # Replace NaN with 'N/A'
                     if pd.isna(autocorr):
                         row.append('N/A')
                     else:
-                        row.append(round(autocorr, 4))
+                        row.append(round(autocorr, 2))
                 summary_rows.append(row)
                 row_index.append(f'Autocorr {lag}')
         else:
             row = []
             for d in dicts:
-                # Handle 'Beta' as a special case to extract the value properly
                 if key == 'Beta':
                     try:
-                        # For Benchmark, Beta is 1.0
                         if 'Benchmark_Return' in d['Beta'].index:
                             beta_val = d['Beta'].loc['Benchmark_Return', 'Benchmark']
                         else:
                             beta_val = d['Beta'].loc['xs_Return', 'Benchmark']
-                        # Replace NaN with 'N/A'
                         if pd.isna(beta_val):
                             row.append('N/A')
                         else:
-                            row.append(round(beta_val, 4))
+                            row.append(round(beta_val, 2))
                     except (KeyError, AttributeError):
                         row.append('N/A')
                 else:
-                    # Access the metric value safely
                     if 'Benchmark_Return' in d:
-                        # For Benchmark, access 'Benchmark_Return'
                         if isinstance(d[key], dict):
                             metric_val = d[key].get('Benchmark_Return', np.nan)
                         else:
                             metric_val = d[key]
                     else:
-                        # For strategies, access 'xs_Return'
                         if isinstance(d[key], dict):
                             metric_val = d[key].get('xs_Return', np.nan)
                         else:
                             metric_val = d[key]
                     
-                    # If it's a Series, extract the first value
                     if isinstance(metric_val, pd.Series):
                         metric_val = metric_val.iloc[0] if not metric_val.empty else np.nan
                     
-                    # Replace NaN with 'N/A'
                     if pd.isna(metric_val):
                         row.append('N/A')
                     else:
-                        row.append(round(metric_val, 4))
+                        row.append(round(metric_val, 2))
             summary_rows.append(row)
-            # Map the metric name to its readable format, defaulting to the original name
             readable_metric = readable_metrics.get(key, key)
             row_index.append(readable_metric)
 
-    # Create DataFrame from the summary rows
     summary_df = pd.DataFrame(summary_rows, index=row_index, columns=labels)
 
-    # Create PrettyTable instance (optional)
     table = PrettyTable()
     table.field_names = ["Metric"] + summary_df.columns.tolist()
 
     for metric, row in summary_df.iterrows():
         table.add_row([metric] + list(row))
-
-    # Optionally, print the table
-    # print(table)
 
     return summary_df
