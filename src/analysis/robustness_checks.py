@@ -22,9 +22,6 @@ def run_holding_period_check(price_data_daily, lookback_period, nLong, rf_monthl
         stats_temp = summarize_performance(excess_returns_temp, rf_monthly, spi_XsReturns_monthly, 12)
         rc_holding_period.loc[i, 'Sharpe_Ratio'] = stats_temp['Sharpe_Ratio_Arithmetic']['xs_Return']
 
-    print("RC of Holding Period")
-    print(rc_holding_period)
-
     plotRobustnessChecks(
         rc_holding_period,
         label="Long Only Strategy",
@@ -51,8 +48,6 @@ def run_lookback_period_check(price_data_daily, lookback_period_range, nLong, nS
         stats_temp = summarize_performance(excess_returns_temp, rf_monthly, spi_XsReturns_monthly, 12)
         rc_lookback_period.loc[i, 'Sharpe_Ratio'] = stats_temp['Sharpe_Ratio_Arithmetic']['xs_Return']
 
-    print("RC of Lookback Period")
-    print(rc_lookback_period)
 
     plotRobustnessChecks(
         rc_lookback_period,
@@ -80,8 +75,7 @@ def run_number_assets_check(price_data_daily, lookback_period, nLong_range, nSho
         stats_temp = summarize_performance(excess_returns_temp, rf_monthly, spi_XsReturns_monthly, 12)
         rc_number_assets.loc[i, 'Sharpe_Ratio'] = stats_temp['Sharpe_Ratio_Arithmetic']['xs_Return']
 
-    print("RC of Number Assets")
-    print(rc_number_assets)
+
 
     plotRobustnessChecks(
         rc_number_assets,
@@ -149,5 +143,4 @@ def run_trx_cost_check(price_data_daily, lookback_period, nLong, nShort, holding
         filename=visualization_path / 'rc_trxCost.png'
     )
 
-    print("RC of Transaction Costs")
-    print(rc_trxCost_return)
+
